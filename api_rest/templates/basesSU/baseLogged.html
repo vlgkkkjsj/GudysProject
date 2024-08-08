@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
+<head>
+    <script src="color-modes.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Document</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/starter-template/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+}
+
+html {
+    height: -webkit-fill-available;
+}
+
+main {
+    height: 100vh;
+    height: -webkit-fill-available;
+    max-height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Estilos específicos para a barra lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 300px;
+    background-color: #2e3f47;
+    padding: 20px;
+    border-right: 1px solid #e3e7eb;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    color: #f4f1f1;
+}
+
+
+.nav-pills .nav-link.active {
+    background-color:#79969C;
+}
+ .nav{
+    --bs-nav-link-color: #f4f1f1;
+    --bs-nav-link-hover-color:#79969C;
+    color: #f4f1f1;
+}
+.sidebar .btn-toggle {
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown {
+    padding-top: 54vh;
+    color: #f4f1f1;
+}
+
+.card {
+    margin-left: 320px; 
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.card .card-body {
+    border-color: #ced4da;
+}
+
+.pagination {
+    margin-right: 25vh;
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.table {
+    font-size: 16px;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.nav-link:hover{
+    border-left: #f4f1f1 2px solid;
+    color: #f4f1f1;
+}
+
+.btn:hover {
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.sidebar {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Outros estilos */
+input[type="search"]:focus {
+    transition: width 0.3s ease-in-out;
+    width: 250px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+a
+{
+    color: #f4f1f1;
+}
+
+@keyframes shadowPulse {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+</style>
+</head>
+<body>
+    <main>
+        {% include '../partials/sidebar.html' %}
+        
+        <div class="custom-jumbotron">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+        <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+      </footer>
+      <!-- ============================================================= SCRIPTS ========================================================= -->
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+          <script>
+            // Iniciar AOS
+            document.addEventListener('DOMContentLoaded', function() {
+                AOS.init();
+            });
+    
+            document.querySelector('form').addEventListener('submit', function() {
+                showSpinner();
+      
+                setTimeout(hideSpinner, 2000);
+            });
+    
+            // Alternância de classe
+            document.querySelector('.toggle-button').addEventListener('click', function() {
+                document.querySelector('.toggle-element').classList.toggle('active');
+            });
+        </script>
+        
+        <script>
+            $(document).ready(function(){
+                var urlToDelete;
+    
+                $('#deleteModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget); 
+                    urlToDelete = button.data('url');
+                });
+    
+                $('#confirmDeleteBtn').click(function(){
+                    window.location.href = urlToDelete;
+                });
+            });
+        </script>
+    </body>    
+</html>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+  {% include 'partials/sidebar.html' %}
+  <div class="container">
+    {% block sidebar_links %}
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Meus RPPS</a></li>
+      <li><a href="#">Atividades</a></li>
+    {% endblock %}
+    <!-- Conteúdo específico do usuário comum -->
+  </div>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'basesSU/baseLogged.html' %}
+
+{% block title %}Listar Usuários{% endblock %}
+
+{% block sidebar %}
+    {% include 'partials/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+            <div class="container my-4">
+
+                      <div class="d-flex justify-content-end align-items-end mb-3">
+                        <a type="button" class="btn btn-outline-info btn-jump" type="button" href="{% url 'cadastrar' %}">cadastrar</a>
+                        <form class="d-flex" role="search" action="{% url 'listar' %}" method="get">
+                          <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
+                          {% if query %}
+                              <a href="{% url 'listar' %}" class="btn btn-outline-secondary">
+                                  <i class="bi bi-x-circle"></i>
+                              </a>
+                          {% endif %}
+                          <button class="btn btn-outline-success button-click-animation" type="submit">Search</button>
+                      </form>                         
+                      </div>
+            </div>
+            
+            <div class="card fade-in">
+              <div class="card-body ">
+              </div>
+                <div class="table-container">
+                  <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">example</th>
+                            <th scope="col">example</th>
+                            <th scope="col">example</th>
+                            <th scope="col">example</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in page_obj %}
+                        <tr>
+                            <th scope="row">example</th>
+                            <td>example</td>
+                            <td>example</td>
+                            <td>example</td>
+
+                            <td>
+                                <button type="button" class="btn btn-info btn-jump me-2" data-bs-toggle="modal" data-bs-target="#modalUser{{ user.id }}">Ver</button>
+                                <a class="btn btn-warning btn-jump" data-bs-toggle="modal" data-bs-target="#updateModal{{ user.id }}">Editar</a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{% url 'delete' user.id %}">
+                                    Deletar
+                                </button>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próximo">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- Modais -->
+{% for user in page_obj %}
+<div class="modal fade " id="modalUser{{ user.id }}" tabindex="-1" aria-labelledby="modalUserLabel{{ user.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered fade-in fade-out">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalUserLabel{{ user.id }}">Detalhes do Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>ID: {{ user.id }}</p>
+                <p><strong>username: {{ user.username }}</p>
+                <p><strong>Nickname: {{ user.nickname }}</p>
+                <p><strong>Nome: {{ user.name }}</p>
+                <p><strong>Idade: {{ user.age }}</p>
+                <p><strong>staff: {{ user.is_staff }}</p>
+                <p><strong>ativo: {{ user.is_active }}</p>
+           </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!-- Modal -->
+{% for user in page_obj %}
+<div class="modal fade" id="updateModal{{user.id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'update' user.id %}"  method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Nickname</label>
+                <input type="text" class="form-control" name="nickname" id="firstName" placeholder="nickname" value="{{user.nickname}}" required>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Name</label>
+                <input type="text" class="form-control" name="name" id="firstName" placeholder="name" value="{{user.name}}" required>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Gender</label>
+                <input type="text" class="form-control" name="gender" id="firstName" placeholder="gender" value="{{user.gender}}" required>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Age</label>
+                <input type="text" class="form-control" name="age" id="firstName" placeholder="age" value="{{user.age}}" required>
+            </div>  
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirmação de Deleção</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja deletar este usuário?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Deletar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

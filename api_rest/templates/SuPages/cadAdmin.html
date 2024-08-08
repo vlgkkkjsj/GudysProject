@@ -1,0 +1,51 @@
+
+
+    
+    {% extends "basesSU/baseLogged.html" %}
+
+    {% block title %}Superuser Dashboard{% endblock %}
+    
+    {% block content %}
+    
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            {% include 'partials/sidebar.html' %}
+          </div>
+          <div class="col-md-9">
+            <div class="custom-form fade-in">
+              <div class="col-md-3 col-lg-8">
+                <form id="submit-form" class="needs-validation" novalidate action="{% url 'cadAdmin' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label for="firstName" class="form-label">Nickname</label>
+                      <input type="text" class="form-control" name="username" id="firstName" placeholder="nickname" value="" required>
+                      <div class="invalid-feedback">Nickname precisa ser válido.</div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="firstName" class="form-label">password</label>
+                      <input type="password" class="form-control" name="password" id="firstName" placeholder="nickname" value="" required>
+                      <div class="invalid-feedback">Nickname precisa ser válido.</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="nickname" class="form-label">Nickname</label>
+                      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="nickname" required>
+                      <div class="invalid-feedback">Por favor, entre com um nickname válido.</div>
+                    </div>
+                  <hr class="my-4">
+                  <button class="w-100 btn btn-primary btn-lg custom-button" type="submit">Salvar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+    
+
+
+
+
+
+    

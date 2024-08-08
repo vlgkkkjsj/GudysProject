@@ -1,0 +1,62 @@
+{% extends "basesSU/baseLogged.html" %}
+
+{% block title %}Superuser Dashboard{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        {% include 'partials/sidebar.html' %}
+      </div>
+      <div class="col-md-9">
+        <div class="custom-form fade-in">
+          <div class="col-md-3 col-lg-8">
+            <form id="submit-form" class="needs-validation" novalidate action="{% url 'salvar' %}" method="POST">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <label for="firstName" class="form-label">Nickname</label>
+                  <input type="text" class="form-control" name="username" id="firstName" placeholder="nickname" value="" required>
+                  <div class="invalid-feedback">Nickname precisa ser válido.</div>
+                </div>
+                <div class="col-sm-6">
+                  <label for="nickname" class="form-label">ID</label>
+                  <div class="input-group has-validation">
+                    <input type="text" class="form-control" name="name" id="nickname" placeholder="id" required>
+                    <div class="invalid-feedback">ID do membro é requerido.</div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label for="gender" class="form-label">Cargo</label>
+                  <input type="text" class="form-control" name="gender" id="gender" placeholder="Cargo" required>
+                  <div class="invalid-feedback">Por favor, entre com um cargo válido.</div>
+                </div>
+                <div class="col-12">
+                  <label for="age" class="form-label">Idade</label>
+                  <input type="number" class="form-control" name="age" id="age" placeholder="Idade" required>
+                  <div class="invalid-feedback">Por favor, entre com uma idade válida.</div>
+                </div>
+                <div class="col-12">
+                  <label for="nickname" class="form-label">Nickname</label>
+                  <input type="text" class="form-control" name="nickname" id="nickname" placeholder="nickname" required>
+                  <div class="invalid-feedback">Por favor, entre com um nickname válido.</div>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="is_admin" id="is_admin">
+                  <label class="form-check-label" for="is_admin">Membro da admin</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="can_view_sidebar" id="can_view_sidebar">
+                  <label class="form-check-label" for="can_view_sidebar">Pode ver a barra lateral</label>
+                </div>
+              </div>
+              <hr class="my-4">
+              <button class="w-100 btn btn-primary btn-lg custom-button" type="submit">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
