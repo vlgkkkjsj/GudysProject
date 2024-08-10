@@ -1,0 +1,92 @@
+{% extends "basesSU/baseLogged.html" %}
+{% block title %}Histórico de Relatórios{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        {% include 'partials/sidebar.html' %}
+      </div>
+      <div class="col-md-9">
+        <div class="fade-in">
+          <h2 class="mb-4">Histórico de Relatórios</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DATA</th>
+                  <th scope="col">HORÁRIO</th>
+                  <th scope="col">SUPERVISORES</th>
+                  <th scope="col">Detalhes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for relatorio in relatorios %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ relatorio.data }}</td>
+                  <td>{{ relatorio.horario }}</td>
+                  <td>{{ relatorio.supervisores }}</td>
+                  <td>
+                    <!-- Botão para abrir o modal -->
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detalhesModal{{ forloop.counter }}">
+                      Ver Detalhes
+                    </button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center">Nenhum relatório encontrado.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Modais para cada relatório -->
+          {% for relatorio in relatorios %}
+          <div class="modal fade" id="detalhesModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="detalhesModalLabel{{ forloop.counter }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="detalhesModalLabel{{ forloop.counter }}">Detalhes do Relatório #{{ relatorio.id }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <h3>Relatório ID: {{ relatorio.id }}</h3>
+                  <p><strong>DATA:</strong> {{ relatorio.data }}</p>
+                  <p><strong>HORÁRIO:</strong> {{ relatorio.horario }}</p>
+                  <p><strong>SUPERVISORES:</strong> {{ relatorio.supervisores }}</p>
+                  
+                  <h3>Detalhes Call/Staff</h3>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">CALL</th>
+                        <th scope="col">STAFF</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for callstaff in relatorio.callstaffs.all %}
+                        <tr>
+                          <td>{{ callstaff.call }}</td>
+                          <td>{{ callstaff.staff }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse,HttpResponseForbidden 
-from .models import User
+from .models import User, Relatorio , CallStaff
+from .modelsRequest import Request
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import user_passes_test
@@ -197,7 +198,9 @@ def custom_logout(request):
     logout(request)
     return response
 
-# 
+
+
+#ESSA MERDA DO KRLH É PRA CADASTRAR ADMINISTRADORES E LISTAR ESSA MERDA DO KRLG (eu quase enlouqueci)
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def redirectList(request):
@@ -241,9 +244,117 @@ def listarAdmin(request):
     }
     return render(request, 'SuPages/listarAdmin.html', context)
 
+#------------------------- SISTEMA DE RPP ----------------------/---------------------------
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def redirectRpp(request):
+    return render(request,'paginas/rpp.html')
+
+def rppList(request):
+    if request.method == "POST":
+        nickname = request.POST.get("nickname")
+        name = request.POST.get("name")
+        gender = request.POST.get("gender")
+        age = request.POST.get("age")
+        username = request.POST.get("username")
+        is_active = request.POST.get("is_active") == "on"
+        is_staff = request.POST.get("is_staff") == "on"
+        is_admin = request.POST.get("is_admin") == "on"
+        is_superuser = request.POST.get("is_superuser") == "on"
+
+       
+        try:
+            user = User.objects.create_user(
+                username=username,
+                nickname=nickname,
+                name=name,
+                gender=gender,
+                age=age,
+                is_active=is_active,
+                is_staff=is_staff,
+                is_admin=is_admin,
+                is_superuser=is_superuser
+            )
+            user.save()
+            messages.success(request, 'Usuário salvo com sucesso!')
+        except Exception as e:
+            messages.error(request, f'Erro ao salvar o usuário: {e}')
+        
+        return redirect('listar') 
+    
+    return render(request, 'cadastro.html')  
 
 
-                               
+def create_request(request):
+    if request.method == 'POST':
+        request_type = request.POST.get('request_type')
+        details = request.POST.get('details')
+        user_request = Request.objects.create(user=request.user, request_type=request_type, details=details)
+        return redirect('RppList')  # Redireciona para a lista de solicitações ou outra página
+    return render(request, 'create_request.html')
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def manage_requests(request):
+    pending_requests = Request.objects.filter(status='pending')
+    return render(request, 'manage_requests.html', {'pending_requests': pending_requests})
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def update_request_status(request, request_id, status):
+    user_request = Request.objects.get(id=request_id)
+    if status in ['approved', 'rejected']:
+        user_request.status = status
+        user_request.save()
+    return redirect('manage_requests') # necessario fazer template
+
+#-------------------------------- SISTEMA DE ADV --------------/---------------------------
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def redirectRelatorio(request):
+       # Lista de dicionários com índices ajustados
+    items = [{'index': i + 1} for i in range(5)]  # Ajuste o range conforme necessário
+
+    context = {
+        'items': items,
+    }
+    return render(request, 'paginas/relatorios.html', context)
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def submitRelatorio(request):
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        horario = request.POST.get('horario')
+        supervisores = request.POST.get('supervisores')
+        
+        # Criar e salvar o Relatório
+        relatorio = Relatorio.objects.create(
+            data=data,
+            horario=horario,
+            supervisores=supervisores
+        )
+        
+        # Filtrar CALL e STAFF que não estão vazios e salvar
+        for i in range(5):  # Altere o range conforme o número de pares CALL/STAFF
+            call = request.POST.get(f'call_{i}')
+            staff = request.POST.get(f'staff_{i}')
+            if call and staff:
+                CallStaff.objects.create(
+                    relatorio=relatorio,
+                    call=call,
+                    staff=staff
+                )
+        
+        return redirect('historicoRelatorios')  # Redirecionar para a página de histórico
+    
+    return render(request, 'paginas/histRelatorios.html')
+
+def historicoRelatorios(request):
+    relatorios = Relatorio.objects.all().order_by('-data')  # Ordenar por data mais recente
+    return render(request, 'paginas/histRelatorios.html', {'relatorios': relatorios})
+
+
+
 
 
 

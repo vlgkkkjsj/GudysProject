@@ -30,7 +30,7 @@
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="">Listar RPP</a>
+                                <a class="nav-link" href="{%url 'redirectRpp'%}">Listar RPP</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" >Listar Pontos</a>
@@ -38,8 +38,32 @@
                         </ul>
                     </div>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'listarAdmin' %}">Listar Administradores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownRelatorios" role="button" data-bs-toggle="collapse" data-bs-target="#relatorios-collapse" aria-expanded="false">
+                        Relatorios
+                    </a>
+                    <div id="relatorios-collapse" class="collapse">
+                        <ul class="nav nav-pills flex-column mb-auto ms-3">
+    
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'redirectRelatorio' %}">Novo Relatório</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'historicoRelatorios' %}">Historico de Relatorios</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="{%url 'redirectRpp'%}">Listar RPP</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" >Listar Pontos</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Logs Sistema</a>

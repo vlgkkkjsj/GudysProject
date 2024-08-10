@@ -4,10 +4,10 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 
 class UserManager(BaseUserManager):
-    def create_user(self, nickname, name, gender, age, username, password=None, **extra_fields):
+    def create_superuser(self, nickname, name, gender, age, username, password=None, **extra_fields):
         if not username:
             raise ValueError('O nome de usuário deve ser fornecido')
-        user = self.model(
+        superuser = self.model(
             nickname=nickname,
             name=name,
             gender=gender,
@@ -15,9 +15,9 @@ class UserManager(BaseUserManager):
             username=username,
             **extra_fields
         )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+        superuser.set_password(password)
+        superuser.save(using=self._db)
+        return superuser
     
     def create_admin(self, nickname, username, password=None, **extra_fields):
         if not username:
@@ -55,3 +55,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'nickname: {self.nickname} | name: {self.name}'
+
+class Relatorio(models.Model):
+    data = models.CharField(max_length=100)
+    horario = models.CharField(max_length=100)
+    supervisores = models.TextField()
+
+    def __str__(self):
+        return f"Relatorio {self.data} - {self.horario}"
+    
+class CallStaff(models.Model):
+    relatorio = models.ForeignKey(Relatorio, related_name='calls_staffs', on_delete=models.CASCADE)
+    call = models.CharField(max_length=100)
+    staff = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'CallStaff {self.id} - CALL: {self.call}, STAFF: {self.staff}'
+

@@ -15,7 +15,12 @@ urlpatterns = [
     path('delete/<int:id>',delete ,name='delete'),
     path('listar/', listar, name='listar'),
     path('adminList/', listarAdmin, name='listarAdmin'),
+    path('submitRelatorio/', submitRelatorio, name='submitRelatorio'),
+    path('redirectRelatorio/', redirectRelatorio, name='redirectRelatorio'),
+    path('historicoRelatorios/', historicoRelatorios, name='historicoRelatorios'),
     path('redirectList/', redirectList, name='redirectList'),
     path('cadAdmin/', cadAdmin, name='cadAdmin'),
+    path('redirectRpp/', redirectRpp, name='redirectRpp'),
+    path('rppList/', rppList, name='rppList'),
     path('relatorios/', custom_logout, name='logout'),
 ]
