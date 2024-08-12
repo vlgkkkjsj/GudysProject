@@ -65,10 +65,7 @@ class Relatorio(models.Model):
         return f"Relatorio {self.data} - {self.horario}"
     
 class CallStaff(models.Model):
-    relatorio = models.ForeignKey(Relatorio, related_name='calls_staffs', on_delete=models.CASCADE)
+    relatorio = models.ForeignKey(Relatorio, on_delete=models.CASCADE, related_name='callstaffs')
     call = models.CharField(max_length=100)
     staff = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f'CallStaff {self.id} - CALL: {self.call}, STAFF: {self.staff}'
 

@@ -41,7 +41,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-     'axes.middleware.AxesMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -56,7 +56,8 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # SECURE_HSTS_PRELOAD = True
 
-
+# veerificar nesse krlh qual é o SO e o navegador para setar os cookies
+# 
 
 # CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
@@ -160,8 +161,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
 
 # Diretório onde os arquivos estáticos são coletados
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

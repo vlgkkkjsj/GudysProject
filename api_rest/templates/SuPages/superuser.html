@@ -1,14 +1,14 @@
 {% extends 'basesSU/baseLogged.html' %}
 
+{% load static %}
+
 {% block title %}Página Específica{% endblock %}
 
 {% block content %}
 <div class="custom-jumbotron">
     <div class="container">
-        <div class="p-5 text-center" id="main-content">
-            <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" fill="currentColor" class="bi bi-bootstrap-fill" viewBox="0 0 16 16">
-                <!-- Ícone do Bootstrap -->
-            </svg>
+        <div class="p-5 text-center" id="main-content">          
+            <img src="{% static 'imgs/gudys.png' %}" alt="Logo" width="200" height="140">
             <h1 class="text-body-emphasis">Olá, {{ user.username }}</h1>
             <p class="col-lg-8 mx-auto fs-5 text-muted">
                 Deseja realizar qual operação? <code>Cadastrar / Deletar</code>, temos mais escolhas...

@@ -226,9 +226,10 @@ def cadAdmin(request):
         return redirect('listarAdmin')
 
     return render(request, 'SuPages/cadAdmin.html')
+
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def listarAdmin(request):
+def listarAdmin(request):#eu nao sei como isso funciona ao certo, e essa merda não deve ser tocada, senao quebra inteiro a porra do codigo
     users = User.objects.filter(is_admin=True, is_staff=True)  # Filtrar administradores
     query = request.GET.get('q', '')
     if query:
@@ -346,15 +347,16 @@ def submitRelatorio(request):
                 )
         
         return redirect('historicoRelatorios')  # Redirecionar para a página de histórico
-    
     return render(request, 'paginas/histRelatorios.html')
 
 def historicoRelatorios(request):
     relatorios = Relatorio.objects.all().order_by('-data')  # Ordenar por data mais recente
     return render(request, 'paginas/histRelatorios.html', {'relatorios': relatorios})
 
-
-
+def detalheRelatorio(request, relatorio_id):
+    relatorio = get_object_or_404(Relatorio, id=relatorio_id)
+    callstaffs = relatorio.callstaffs.all()  # Usando o related_name definido no modelo
+    return render(request, 'paginas/detalheRelatorio.html', {'relatorio': relatorio, 'callstaffs': callstaffs})
 
 
 
