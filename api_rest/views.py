@@ -124,22 +124,21 @@ def cadastrar(request):
 def salvar(request):
     if request.method == "POST":
         nickname = request.POST.get("nickname")
-        name = request.POST.get("name")
-        gender = request.POST.get("gender")
+        area = request.POST.get("area")
+        id_user = request.POST.get("id_user")
         age = request.POST.get("age")
         username = request.POST.get("username")
         is_active = request.POST.get("is_active") == "on"
         is_staff = request.POST.get("is_staff") == "on"
         is_admin = request.POST.get("is_admin") == "on"
-        is_superuser = request.POST.get("is_superuser") == "on"
 
        
         try:
             user = User.objects.create_user(
                 username=username,
                 nickname=nickname,
-                name=name,
-                gender=gender,
+                area=area,
+                id_user=id_user,
                 age=age,
                 is_active=is_active,
                 is_staff=is_staff,
@@ -157,7 +156,7 @@ def salvar(request):
 
 
 # view para editar
-@login_required # Variavel usuario recebe recebe usuario ou retorna erro 404,caso 
+@login_required # Variavel usuario recebe usuario ou retorna erro 404,caso o id nao seja encontrado dentro do DB
 @user_passes_test(lambda u: u.is_superuser or u.is_admin)
 def editar(request, id):
     user = get_object_or_404(User, id=id)
@@ -171,14 +170,16 @@ def update(request, id):
     user = get_object_or_404(id=id)
     if request.method =='POST':
         nickname = request.POST.get("nickname")
-        name = request.POST.get("name")
-        gender = request.POST.get("gender")
+        username = request.POST.get("username")
+        area = request.POST.get("area")
+        id_user = request.POST.get("id_user")
         age = request.POST.get("age")
 
         user = get_object_or_404(User, id=id)
         user.nickname = nickname
-        user.name = name
-        user.gender = gender
+        user.username = username
+        user.id_user = id_user
+        user.area = area
         user.age = age
         user.save()
         return redirect('homeLog')
@@ -211,10 +212,10 @@ def redirectList(request):
 def cadAdmin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password')
         nickname = request.POST.get('nickname')
+        password = request.POST.get('password')
         
-        # Verificar se o usuário já existe
+        # Verificar se o filho da puta já existe
         if User.objects.filter(username=username).exists():
             messages.error(request, 'O usuário já existe.')
             return redirect('cadAdmin')
@@ -309,7 +310,7 @@ def update_request_status(request, request_id, status):
         user_request.save()
     return redirect('manage_requests') # necessario fazer template
 
-#-------------------------------- SISTEMA DE ADV --------------/---------------------------
+#-------------------------------- SISTEMA DE RELATORIO ----------/---------------------------
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def redirectRelatorio(request):
@@ -359,4 +360,12 @@ def detalheRelatorio(request, relatorio_id):
     return render(request, 'paginas/detalheRelatorio.html', {'relatorio': relatorio, 'callstaffs': callstaffs})
 
 
+# ESSE CARALHO DE FILHO DA PUTA SERVE PRA REDIRECIONAR PRA PAGINA DO KRLH DO USUARIO
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
+def redirectUserProfile(request):
+    return render(request, 'partials/userProfile.html')
+
+
+1

@@ -5,25 +5,77 @@
 {% block title %}Página Específica{% endblock %}
 
 {% block content %}
-<div class="custom-jumbotron">
-    <div class="container">
-        <div class="p-5 text-center" id="main-content">          
-            <img src="{% static 'imgs/gudys.png' %}" alt="Logo" width="200" height="140">
-            <h1 class="text-body-emphasis">Olá, {{ user.username }}</h1>
-            <p class="col-lg-8 mx-auto fs-5 text-muted">
-                Deseja realizar qual operação? <code>Cadastrar / Deletar</code>, temos mais escolhas...
-            </p>
-            <div class="d-inline-flex gap-2 mb-5">
-                <a class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill btn-jump" type="button" href="{% url 'cadastrar' %}">Cadastrar Usuário
-                    <svg class="bi ms-2" width="24" height="24">
-                        <use xlink:href="#arrow-right-short" />
-                    </svg>
-                </a>
-                <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill btn-jump" id="manage-users-link" type="button" href="{%url 'listar' %}">Gerenciar Usuários</a>
-            </div>
-            </div>
+    
+<main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+    <div class="container-fluid">
+        <div class="jumbotron">
+          <h1 class="display-4">Gerenciamento Gudys</h1>
+          <p class="lead">Navegador</p>
         </div>
-    </div>
-</div>
-</div>
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Eventos</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de eventos</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Design</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de Design</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Jornalismo</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de Jornalismo</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Movcall/Movchat</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de Movcall/Movchat</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Recrutamento</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de Recrutamento</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <img src="" class="card-img-top" alt="Card image">
+              <div class="card-body">
+                <h5 class="card-title"> Suporte</h5>
+                <p class="card-text">redirecionamento e pipipopo para dash de suporte</p>
+                <a href="#" class="btn btn-primary">Ir para dashboard</a>
+              </div>
+            </div>
+          </div>
+         
+  </main>
+
+
+
 {% endblock %}

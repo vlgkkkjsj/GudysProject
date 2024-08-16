@@ -1,0 +1,77 @@
+{% extends 'basesSU/baseLogged.html' %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 800px;">
+  <div class="jumbotron text-center mb-4">
+        <h1 class="display-4">Detalhes do Relatório</h1>
+    </div>
+    <div class="report-details">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Informações do Relatório</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                  
+                  <dt class="col-sm-3">Data:</dt>
+                  <dd class="col-sm-9">{{ relatorio.data }}</dd>
+
+                  <dt class="col-sm-3">Horário:</dt>
+                  <dd class="col-sm-9">{{ relatorio.horario }}</dd>
+
+                  <dt class="col-sm-3">Supervisores:</dt>
+                  <dd class="col-sm-9">{{ relatorio.supervisores }}</dd>
+
+                  <dt class="col-sm-3">Call:</dt>
+                  <dd class="col-sm-9">{{ relatorio.call }}</dd>
+
+                  <dt class="col-sm-3">Staffs:</dt>
+                  <dd class="col-sm-9">{{ relatorio.staffs }}</dd>
+
+                  {% for callstaff in callstaffs %}
+                  <dt class="col-sm-3">{{ callstaff.call }}</dt>
+                  <dd class="col-sm-9">{{ callstaff.staff }}</dd>
+                  </tr>
+                {% empty %}
+              </dl>
+          </div>
+                  <td colspan="2" class="text-center">Nenhum detalhe encontrado.</td>
+                </tr>
+              {% endfor %}
+              <div class="card-footer text-end">
+                <a href="" class="btn btn-primary">Editar</a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="">Excluir</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Exclusão -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Você tem certeza de que deseja excluir este relatório?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Script para Confirmar Exclusão -->
+<script>
+    document.querySelectorAll('[data-bs-target="#deleteModal"]').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const deleteUrl = this.getAttribute('data-url');
+            document.getElementById('confirmDeleteBtn').setAttribute('href', deleteUrl);
+        });
+    });
+</script>
+{% endblock %}

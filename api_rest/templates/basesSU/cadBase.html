@@ -1,62 +1,289 @@
-{% extends "basesSU/baseLogged.html" %}
+{% extends 'basesSU/baseLogged.html' %}
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
 
-{% block title %}Superuser Dashboard{% endblock %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <title>Document</title>
 
-{% block content %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        {% include 'partials/sidebar.html' %}
-      </div>
-      <div class="col-md-9">
-        <div class="custom-form fade-in">
-          <div class="col-md-3 col-lg-8">
-            <form id="submit-form" class="needs-validation" novalidate action="{% url 'salvar' %}" method="POST">
-              {% csrf_token %}
-              <div class="row g-3">
-                <div class="col-sm-6">
-                  <label for="firstName" class="form-label">Nickname</label>
-                  <input type="text" class="form-control" name="username" id="firstName" placeholder="nickname" value="" required>
-                  <div class="invalid-feedback">Nickname precisa ser válido.</div>
-                </div>
-                <div class="col-sm-6">
-                  <label for="nickname" class="form-label">ID</label>
-                  <div class="input-group has-validation">
-                    <input type="text" class="form-control" name="name" id="nickname" placeholder="id" required>
-                    <div class="invalid-feedback">ID do membro é requerido.</div>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="gender" class="form-label">Cargo</label>
-                  <input type="text" class="form-control" name="gender" id="gender" placeholder="Cargo" required>
-                  <div class="invalid-feedback">Por favor, entre com um cargo válido.</div>
-                </div>
-                <div class="col-12">
-                  <label for="age" class="form-label">Idade</label>
-                  <input type="number" class="form-control" name="age" id="age" placeholder="Idade" required>
-                  <div class="invalid-feedback">Por favor, entre com uma idade válida.</div>
-                </div>
-                <div class="col-12">
-                  <label for="nickname" class="form-label">Nickname</label>
-                  <input type="text" class="form-control" name="nickname" id="nickname" placeholder="nickname" required>
-                  <div class="invalid-feedback">Por favor, entre com um nickname válido.</div>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="is_admin" id="is_admin">
-                  <label class="form-check-label" for="is_admin">Membro da admin</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="can_view_sidebar" id="can_view_sidebar">
-                  <label class="form-check-label" for="can_view_sidebar">Pode ver a barra lateral</label>
-                </div>
-              </div>
-              <hr class="my-4">
-              <button class="w-100 btn btn-primary btn-lg custom-button" type="submit">Salvar</button>
-            </form>
-          </div>
+    <!-- Icons and Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            font-family: "Noto Sans", sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            background-color: rgba(42,27,121,0.7);
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 270px;
+            height: 100vh;
+            background: linear-gradient(to bottom, #4723ad, #2a1b79);
+            color: #ffffff;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 1000;
+            transition: width 0.3s ease, transform 0.3s ease;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(92, 78, 128, 0.8);
+        }
+
+        .sidebar a:active {
+            background-color: #211d2b;
+            border-radius: 4px;
+        }
+
+        .sidebar .nav-link {
+            transition: background-color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .sidebar .collapse {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .dropdown-container {
+            border: 1px solid #ffffff;
+            border-radius: 50px;
+            padding: 10px;
+            display: inline-block;
+            width: 25vh;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dropdown-container a {
+            color: #000000;
+        }
+
+        .dropdown-container a:hover {
+            color: #1d1d26;
+        }
+
+        .container {
+            display: flex;
+            padding: 30px;
+            margin-left: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            background-color: #ffffff;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            color: #333333;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 40px;
+            margin-left: 40px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            color: #555555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #572bca;
+            border: none;
+            color: #ffffff;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1d1d26;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+.card{
+        margin-left: 20vh;
+          
+    }
+
+        .form-container {
+    
+    width: 100%;
+    max-width: 70%; 
+    height: 250px;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+        
+        .form-card {
+    max-width: 100%; /* Removendo o limite */
+    width: 70%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+   
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        height: 3rem;
+        border-radius: 5px;
+        padding-left: 10px;
+        width: 70%;
+    }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .form-check-input:checked {
+        background-color: #572bca;
+        border-color: #572bca;
+        }
+
+    </style>
+</head>
+
+<body>
+    <main>
+        {% include '../partials/sidebar.html' %}
+        {% block content %}
+        {% endblock %}
+        <div id="loading">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <rect fill="#fff" width="3" height="100" transform="translate(0) rotate(180 3 50)">
+                    <animate attributeName="height" dur="1s" values="30; 100; 30" repeatCount="indefinite" />
+                </rect>
+                <rect x="17" fill="#fff" width="3" height="100" transform="translate(0) rotate(180 20 50)">
+                    <animate attributeName="height" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s" />
+                </rect>
+                <rect x="40" fill="#fff" width="3" height="100" transform="translate(0) rotate(180 40 50)">
+                    <animate attributeName="height" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.3s" />
+                </rect>
+                <rect x="60" fill="#fff" width="3" height="100" transform="translate(0) rotate(180 58 50)">
+                    <animate attributeName="height" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.5s" />
+                </rect>
+                <rect x="80" fill="#fff" width="3" height="100" transform="translate(0) rotate(180 76 50)">
+                    <animate attributeName="height" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s" />
+                </rect>
+            </svg>
         </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
+    </main>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        document.querySelectorAll('.table-hover tbody tr').forEach(function(row) {
+            row.addEventListener('mouseover', function() {
+                this.style.backgroundColor = '#e8e8e8';
+            });
+            row.addEventListener('mouseout', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    </script>
+</body>
+</html>

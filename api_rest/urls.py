@@ -21,6 +21,7 @@ urlpatterns = [
     path('relatorio/<int:relatorio_id>/', detalheRelatorio, name='detalheRelatorio'),
     path('redirectList/', redirectList, name='redirectList'),
     path('cadAdmin/', cadAdmin, name='cadAdmin'),
+    path('userProfile/', redirectUserProfile, name='redirectUserProfile'),
     path('redirectRpp/', redirectRpp, name='redirectRpp'),
     path('rppList/', rppList, name='rppList'),
     path('relatorios/', custom_logout, name='logout'),

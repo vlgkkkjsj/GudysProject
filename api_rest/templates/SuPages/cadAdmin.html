@@ -1,47 +1,31 @@
- {% extends "basesSU/baseLogged.html" %}
-    {% block title %}Superuser Dashboard{% endblock %}
-    
-    {% block content %}
-    
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3">
-            {% include 'partials/sidebar.html' %}
-          </div>
-          <div class="col-md-9">
-            <div class="custom-form fade-in">
-              <div class="col-md-3 col-lg-8">
-                <form id="submit-form" class="needs-validation" novalidate action="{% url 'cadAdmin' %}" method="POST">
-                  {% csrf_token %}
-                  <div class="row g-3">
-                    <div class="col-sm-6">
-                      <label for="firstName" class="form-label">Nickname</label>
-                      <input type="text" class="form-control" name="username" id="firstName" placeholder="nickname" value="" required>
-                      <div class="invalid-feedback">Nickname precisa ser válido.</div>
-                    </div>
-                    <div class="col-sm-6">
-                      <label for="firstName" class="form-label">password</label>
-                      <input type="password" class="form-control" name="password" id="firstName" placeholder="nickname" value="" required>
-                      <div class="invalid-feedback">Nickname precisa ser válido.</div>
-                    </div>
-                    <div class="col-12">
-                      <label for="nickname" class="form-label">Nickname</label>
-                      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="nickname" required>
-                      <div class="invalid-feedback">Por favor, entre com um nickname válido.</div>
-                    </div>
-                  <hr class="my-4">
-                  <button class="w-100 btn btn-primary btn-lg custom-button" type="submit">Salvar</button>
-                </form>
+{% extends 'basesSU/cadBase.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100 ">
+  <div class="card form-card shadow w-50" style="margin-left: 20vh;">
+      <div class="card-body fadeIn">
+          <h2 class="mb-5 text-center">Cadastro novo usuario</h2>
+          <form id="signup-form" action="{% url 'salvar' %}" method="POST">
+              {% csrf_token %}
+
+              <div class="mb-2">
+                  <label for="full-name" class="form-label">Nickname</label>
+                  <input type="text" id="full-name" name="nickname" class="form-control" required>
               </div>
+
+              <div class="mb-2">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" id="username" name="username" class="form-control" required>
+              </div>
+
+              <div class="mb-2">
+                  <label for="password" class="form-label">password</label>
+                  <input type="text" id="password" name="password" class="form-control" required>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-outline-dark btn-lg" style="height: 70px; width: 100px;">Dark</button>
             </div>
-          </div>
-        </div>
-      </div>
-    {% endblock %}
-    
-
-
-
-
-
-    
+        </form>
+  </div>
+</div>
+{% endblock %}

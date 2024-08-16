@@ -3,63 +3,61 @@
     <div class="d-flex flex-column flex-shrink-0 p-3">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">       
             <img src="{% static 'imgs/gudys.png' %}" alt="Logo" width="40" height="32">
-            <span class="fs-4">Sidebar</span>
+    
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             {% if user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'sideSuperUser' %}">Home</a>
+                    <a class="nav-link sidebar-link" href="{% url 'sideSuperUser' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Advertências</a>
+                    <a class="nav-link sidebar-link" href="#">Advertências</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownDashboard" role="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle sidebar-link" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
                         Dashboard
                     </a>
                     <div id="dashboard-collapse" class="collapse">
                         <ul class="nav nav-pills flex-column mb-auto ms-3">
-    
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'listar' %}">Listar Usuarios</a>
+                                <a class="nav-link sidebar-link" href="{% url 'cadastrar' %}">Cadastrar Usuarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'redirectList' %}">Adicionar Admin</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'redirectRpp'%}">Listar RPP</a>
+                                <a class="nav-link sidebar-link" href="{% url 'listar' %}">Listar Usuarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" >Listar Pontos</a>
+                                <a class="nav-link sidebar-link" href="{% url 'redirectList' %}">Adicionar Admin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-link" href="{% url 'redirectRpp' %}">Listar RPP</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-link" href="#">Listar Pontos</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'listarAdmin' %}">Listar Administradores</a>
+                    <a class="nav-link sidebar-link" href="{% url 'listarAdmin' %}">Listar Administradores</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownRelatorios" role="button" data-bs-toggle="collapse" data-bs-target="#relatorios-collapse" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle sidebar-link" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#relatorios-collapse" aria-expanded="false">
                         Relatorios
                     </a>
                     <div id="relatorios-collapse" class="collapse">
                         <ul class="nav nav-pills flex-column mb-auto ms-3">
-    
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'redirectRelatorio' %}">Novo Relatório</a>
+                                <a class="nav-link sidebar-link" href="{% url 'redirectRelatorio' %}">Novo Relatório</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'historicoRelatorios' %}">Historico de Relatorios</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'redirectRpp'%}">Listar RPP</a>
+                                <a class="nav-link sidebar-link" href="{% url 'historicoRelatorios' %}">Historico de Relatorios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" >Listar Pontos</a>
+                                <a class="nav-link sidebar-link" href="{% url 'redirectRpp' %}">Listar RPP</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-link" href="#">Listar Pontos</a>
                             </li>
                         </ul>
                     </div>
@@ -80,32 +78,19 @@
     </div>
     <div class="dropdown">
         <hr>
-        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
-            <strong>{{ user.username }}</strong>
-        </a>
-        <ul class="dropdown-menu text-small shadow">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
-        </ul>
+        <div class="dropdown-container text-center">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
+                <h6 class="username">{{ user.username }}</h6>
+            </a>
+    
+            <ul class="dropdown-menu text-small shadow">
+                <li><a class="dropdown-item text-center" href="#">New project...</a></li>
+                <li><a class="dropdown-item text-center" href="#">Settings</a></li>
+                <li><a class="dropdown-item text-center" href="{% url 'redirectUserProfile' %}">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center" href="{% url 'logout' %}">Sign out</a></li>
+            </ul>
+        </div>
     </div>
 </div>
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a href="/" class="d-inline-flex  text-decoration-none">
-          <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
-        </a>
-      </div>
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-        <li><a href="#" class="nav-link px-2">Features</a></li>
-        <li><a href="#" class="nav-link px-2">Pricing</a></li>
-        <li><a href="#" class="nav-link px-2">FAQs</a></li>
-        <li><a href="#" class="nav-link px-2">About</a></li>
-      </ul>
-    </header>
-    </div>

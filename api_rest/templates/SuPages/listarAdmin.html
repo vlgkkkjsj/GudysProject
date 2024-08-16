@@ -2,35 +2,28 @@
 
 {% block title %}Listar Usuários{% endblock %}
 
-{% block sidebar %}
-    {% include 'partials/sidebar.html' %}
-{% endblock %}
 
 {% block content %}
-            <div class="container my-4">
+<div class="container">
+    <div class="d-flex justify-content-end align-items-end mb-3">
+        <form class="d-flex align-items-center" role="search" action="{% url 'listar' %}" method="get">
 
-                      <div class="d-flex justify-content-end align-items-end mb-3">
-                        <a type="button" class="btn btn-outline-info btn-jump" type="button" href="{% url 'cadAdmin' %}">cadastrar</a>
-                        <form class="d-flex" role="search" action="{% url 'listarAdmin' %}" method="get">
-                          <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
-                          {% if query %}
-                              <a href="{% url 'listarAdmin' %}" class="btn btn-outline-secondary">
-                                  <i class="bi bi-x-circle"></i>
-                              </a>
-                          {% endif %}
-                          <button class="btn btn-outline-success button-click-animation" type="submit">Search</button>
-                      </form>                         
-                      </div>
+                <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
+                {% if query %}
+                    <a href="{% url 'listar' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-x-circle"></i>
+                    </a>
+                {% endif %}
+                <button class="btn btn-outline-success ms-2" type="submit">Search</button>
             </div>
-            
-            <div class="card fade-in">
-              <div class="card-body ">
-              </div>
+        </form>
+    </div>
                 <div class="table-container">
-                  <table class="table table-striped">
+                  <table class="table table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
+                            <th scope="col">ID do usuario</th>
                             <th scope="col">Nickname</th>
                             <th scope="col">Username</th>
                             <th scope="col">Ações</th>
@@ -39,7 +32,9 @@
                     <tbody>
                         {% for user in page_obj %}
                         <tr>
+
                             <th scope="row">{{ user.id }}</th>
+                            <td>{{ user.id_user }}</td>
                             <td>{{ user.username }}</td>
                             <td>{{ user.nickname }}</td>
 
@@ -80,7 +75,6 @@
         </ul>
     </nav>
 </div>
-
 <!-- Modais -->
 {% for user in page_obj %}
 <div class="modal fade " id="modalUser{{ user.id }}" tabindex="-1" aria-labelledby="modalUserLabel{{ user.id }}" aria-hidden="true">
@@ -155,5 +149,4 @@
             </div>
         </div>
     </div>
-
     {% endblock %}

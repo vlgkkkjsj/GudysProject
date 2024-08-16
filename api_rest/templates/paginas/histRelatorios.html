@@ -1,0 +1,37 @@
+{% extends "basesSU/baseLogged.html" %}
+
+{% block content %}
+<div class="report-history-container my-5">
+  <div class="card report-history-card shadow-sm p-4">
+    <h2 class="mb-4 text-center">Histórico de Relatórios</h2>
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Data</th>
+          <th scope="col">Horário</th>
+          <th scope="col">Supervisores</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for relatorio in relatorios %}
+        <tr>
+          <td>{{ relatorio.id }}</td>
+          <td>{{ relatorio.data }}</td>
+          <td>{{ relatorio.horario }}</td>
+          <td>{{ relatorio.supervisores }}</td>
+          <td>
+            <a href="{% url 'detalheRelatorio' relatorio.id %}" class="btn btn-primary btn-sm">Ver Detalhes</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">Nenhum relatório encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
