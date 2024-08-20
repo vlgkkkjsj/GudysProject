@@ -4,7 +4,7 @@
 
 
 {% block content %}
-<div class="container">
+<div class="container-">
     <div class="d-flex justify-content-end align-items-end mb-3">
         <form class="d-flex align-items-center" role="search" action="{% url 'listar' %}" method="get">
 
@@ -22,7 +22,6 @@
                   <table class="table table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">ID do usuario</th>
                             <th scope="col">Nickname</th>
                             <th scope="col">Username</th>
@@ -32,8 +31,6 @@
                     <tbody>
                         {% for user in page_obj %}
                         <tr>
-
-                            <th scope="row">{{ user.id }}</th>
                             <td>{{ user.id_user }}</td>
                             <td>{{ user.username }}</td>
                             <td>{{ user.nickname }}</td>
@@ -50,7 +47,6 @@
             </div>
         </div>
     </div>
-
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}

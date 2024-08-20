@@ -1,18 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse,HttpResponseForbidden 
-from .models import User, Relatorio , CallStaff
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden 
+from .models import User, Relatorio, CallStaff
 from .modelsRequest import Request
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login, logout
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 from django.core.paginator import Paginator
-from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.middleware.csrf import get_token
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 import logging
+import secrets
 
 logger = logging.getLogger(__name__)
 # from django.views.decorators.csrf import csrf_exempt
@@ -24,13 +22,17 @@ def is_admin(user):
     return user.is_authenticated and user.is_admin
 
 def is_superuser(user):
-    return user.is_superuser
+    return user.is_authenticated and user.is_superuser
 
 def is_staff(user):
     return user.is_authenticated and not user.is_superuser and not user.is_admin
 
-# Verificação de redirecionamento de cada usuario com as devidas permissoes
+# Essa porra vai gerar um cookie randomizado
 
+def random_cookie():
+    return secrets.token_hex(16)
+
+# Verificação de redirecionamento de cada usuario com as devidas permissoes
 @login_required
 @user_passes_test(is_superuser)
 def sideSuperUser(request):
@@ -83,24 +85,41 @@ def logar(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             auth_login(request, user)
             response = redirect('homeLog')
-            response.set_cookie('user_nickname', user.username, max_age=3600)  # Define o cookie com o 
+
+            # Geração de um novo valor para o cookie
+            random_cookie_value = random_cookie()
+
+            # Definir o cookie na resposta
+            response.set_cookie(
+                'user_username',             
+                random_cookie_value,             
+                max_age=3600,                     
+                httponly=True,                    
+                secure=True                       
+            )
+
             return response
         else:
             form_login = AuthenticationForm()
     else:
         form_login = AuthenticationForm()
+    
     return render(request, 'login.html', {'form_login': form_login})
 
 @login_required
+
+@login_required
 def listar(request):
-    users = User.objects.all()
+    users= User.objects.all().order_by('area')
     query = request.GET.get('q')
 
     if query:
         users = users.filter(Q(name__icontains=query))
+
     paginator = Paginator(users, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -110,6 +129,7 @@ def listar(request):
         'query': query,
     }
     return render(request, 'listar.html', context)
+
 # Esse caralho, vai cadastrar os usuarios
 
 #view cadastrar
@@ -131,7 +151,6 @@ def salvar(request):
         is_active = request.POST.get("is_active") == "on"
         is_staff = request.POST.get("is_staff") == "on"
         is_admin = request.POST.get("is_admin") == "on"
-
        
         try:
             user = User.objects.create_user(
@@ -143,11 +162,12 @@ def salvar(request):
                 is_active=is_active,
                 is_staff=is_staff,
                 is_admin=is_admin,
-                is_superuser=is_superuser
+                is_superuser= False
             )
             user.save()
             messages.success(request, 'Usuário salvo com sucesso!')
         except Exception as e:
+            logger.error(f'Erro ao salvar o usuário: {e}')
             messages.error(request, f'Erro ao salvar o usuário: {e}')
         
         return redirect('listar') 
@@ -195,11 +215,12 @@ def delete(request, id):
 
 def custom_logout(request):
     response = redirect('home')
+
     response.delete_cookie('user_nickname')  # Remove o cookie ao fazer logout
+    response.delete_cookie('sessionid') # Remove o cookie ao fazer logout
+
     logout(request)
     return response
-
-
 
 #ESSA MERDA DO KRLH É PRA CADASTRAR ADMINISTRADORES E LISTAR ESSA MERDA DO KRLG (eu quase enlouqueci)
 @login_required
@@ -315,7 +336,7 @@ def update_request_status(request, request_id, status):
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def redirectRelatorio(request):
        # Lista de dicionários com índices ajustados
-    items = [{'index': i + 1} for i in range(5)]  # Ajuste o range conforme necessário
+    items = [{'index': i + 1} for i in range(5)]  
 
     context = {
         'items': items,
@@ -368,4 +389,3 @@ def redirectUserProfile(request):
     return render(request, 'partials/userProfile.html')
 
 
-1

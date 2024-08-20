@@ -1,22 +1,53 @@
 {% load static %}
-<div class="sidebar">
-    <div class="d-flex flex-column flex-shrink-0 p-3">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">       
-            <img src="{% static 'imgs/gudys.png' %}" alt="Logo" width="40" height="32">
+<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Eleventh navbar example">
+    <div class="container-nav">
     
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExample09">
+        <span class="navbar-text user-greeting">
+            Olá, {{ user.username }}
+        </span>
+      </div>
+
+      <!-- Div do perfil do usuário fora do div de navegação -->
+      <div class="userProfile ms-auto d-flex align-items-center">
+        <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
+            <h6 class="username"> {{ user.username }}</h6>
         </a>
+      </div>
+    </div>
+</nav>
+{% load static%}
+<div class="sidebar" id="sidebar">
+    <div class="d-flex flex-column flex-shrink-0 p-3">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+            <img src="{% static 'imgs/gudys.png' %}" alt="Logo" width="40" height="32">
+        </a>
+
         <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            {% if user.is_superuser %}
+        <div class="sidebar-content">
+            <ul class="nav nav-pills flex-column mb-auto">
+                {% if user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link sidebar-link" href="{% url 'sideSuperUser' %}">Home</a>
+                    <a class="nav-link sidebar-link" href="{% url 'sideSuperUser' %}">
+                        <i class="bi bi-house"></i>
+                        <span class="sidebar-text">Home</span>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link sidebar-link" href="#">Advertências</a>
+                    <a class="nav-link sidebar-link" href="#">
+                        <i class="bi bi-exclamation-diamond-fill"></i>
+                        <span class="sidebar-text">Advertências</span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle sidebar-link" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                        Dashboard
+                        <i class="bi bi-table"></i>
+                        <span class="sidebar-text">Dashboard</span>
                     </a>
                     <div id="dashboard-collapse" class="collapse">
                         <ul class="nav nav-pills flex-column mb-auto ms-3">
@@ -27,9 +58,6 @@
                                 <a class="nav-link sidebar-link" href="{% url 'listar' %}">Listar Usuarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link sidebar-link" href="{% url 'redirectList' %}">Adicionar Admin</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link sidebar-link" href="{% url 'redirectRpp' %}">Listar RPP</a>
                             </li>
                             <li class="nav-item">
@@ -39,11 +67,25 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link sidebar-link" href="{% url 'listarAdmin' %}">Listar Administradores</a>
+                    <a class="nav-link dropdown-toggle sidebar-link" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#admin-collapse" aria-expanded="false">
+                        <i class="bi bi-table"></i>
+                        <span class="sidebar-text">Administradores</span>
+                    </a>
+                    <div id="admin-collapse" class="collapse">
+                        <ul class="nav nav-pills flex-column mb-auto ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-link" href="{% url 'listarAdmin' %}">Listar Admin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-link" href="{% url 'redirectList' %}">Adicionar Admin</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle sidebar-link" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#relatorios-collapse" aria-expanded="false">
-                        Relatorios
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="sidebar-text">Relatórios</span>
                     </a>
                     <div id="relatorios-collapse" class="collapse">
                         <ul class="nav nav-pills flex-column mb-auto ms-3">
@@ -51,7 +93,7 @@
                                 <a class="nav-link sidebar-link" href="{% url 'redirectRelatorio' %}">Novo Relatório</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link sidebar-link" href="{% url 'historicoRelatorios' %}">Historico de Relatorios</a>
+                                <a class="nav-link sidebar-link" href="{% url 'historicoRelatorios' %}">Histórico de Relatórios</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link sidebar-link" href="{% url 'redirectRpp' %}">Listar RPP</a>
@@ -63,7 +105,10 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Logs Sistema</a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-braces"></i>
+                        <span class="sidebar-text">Logs Sistema</span>
+                    </a>
                 </li>
             {% elif user.is_admin %}
                 <li class="nav-item">
@@ -74,23 +119,23 @@
                     <a class="nav-link" href="#">User Dashboard</a>
                 </li>
             {% endif %}
-        </ul>
-    </div>
-    <div class="dropdown">
-        <hr>
-        <div class="dropdown-container text-center">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
-                <h6 class="username">{{ user.username }}</h6>
-            </a>
-    
-            <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item text-center" href="#">New project...</a></li>
-                <li><a class="dropdown-item text-center" href="#">Settings</a></li>
-                <li><a class="dropdown-item text-center" href="{% url 'redirectUserProfile' %}">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-center" href="{% url 'logout' %}">Sign out</a></li>
             </ul>
+        </div>
+        <div class="dropdown">
+            <hr>
+            <div class="dropdown-container text-center">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <h6 class="username">{{ user.username }}</h6>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <li><a class="dropdown-item text-center" href="#">New project...</a></li>
+                    <li><a class="dropdown-item text-center" href="#">Settings</a></li>
+                    <li><a class="dropdown-item text-center" href="{% url 'redirectUserProfile' %}">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="{% url 'logout' %}">Sign out</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

@@ -1,59 +1,53 @@
 {% extends 'basesSU/cadBase.html' %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card form-card shadow w-50 p-4">
-    <div class="card-body fadeIn">
-      <h2 class="mb-5 text-center">Cadastro Novo Usuário</h2>
-      <form id="signup-form" action="{% url 'salvar' %}" method="POST">
-        {% csrf_token %}
+<div class="container-cad">
+  <div class="image-section"></div>
+  <div class="form-section">
+    <form id="signup-form" action="{% url 'salvar' %}" method="POST">
+      {% csrf_token %}
+      <h1>Cadastro Novo Usuário</h1>
+      
+      <div class="input-group">
+        <label for="nickname">Nickname</label>
+        <input type="text" id="nickname" name="nickname" class="form-control" required>
+      </div>
 
-        <div class="mb-4">
-          <label for="nickname" class="form-label">Nickname</label>
-          <input type="text" id="nickname" name="nickname" class="form-control" required>
-        </div>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+      </div>
 
-        <div class="mb-4">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" id="username" name="username" class="form-control" required>
-        </div>
+      <div class="input-group">
+        <label for="area">Área</label>
+        <input type="text" id="area" name="area" class="form-control" required>
+      </div>
 
-        <div class="mb-4">
-          <label for="area" class="form-label">Área</label>
-          <input type="text" id="area" name="area" class="form-control" required>
-        </div>
+      <div class="input-group">
+        <label for="id-user">ID User</label>
+        <input type="text" id="id-user" name="id_user" class="form-control" 
+        style="margin-left: 20px;"required>
+      </div>
 
-        <div class="mb-4">
-          <label for="id-user" class="form-label">ID User</label>
-          <input type="text" id="id-user" name="id_user" class="form-control" required>
-        </div>
-        
-        <div class="mb-4">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="is_staff" name="is_staff">
-            <label class="form-check-label" for="is_staff">Staff</label>
-          </div>
-        </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="is_staff" name="is_staff">
+        <label class="form-check-label" for="is_staff">Staff</label>
+      </div>
 
-        <div class="mb-4">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="is_admin" name="is_admin">
-            <label class="form-check-label" for="is_admin">Admin</label>
-          </div>
-        </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="is_admin" name="is_admin">
+        <label class="form-check-label" for="is_admin">Admin</label>
+      </div>
 
-        <div class="mb-4">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="is_active" name="is_active">
-            <label class="form-check-label" for="is_active">Ativo</label>
-          </div>
-        </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="is_active" name="is_active">
+        <label class="form-check-label" for="is_active">Ativo</label>
+      </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-dark btn-lg">Cadastrar</button>
-        </div>
-      </form>
-    </div>
+      <div class="text-center">
+        <button type="submit" class="btn-primary">Cadastrar</button>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

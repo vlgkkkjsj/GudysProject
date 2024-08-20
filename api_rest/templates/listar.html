@@ -1,12 +1,11 @@
 {% extends 'basesSU/baseLogged.html' %}
 
 {% block title %}Listar Usuários{% endblock %}
-
-
 {% block content %}
+
 <div class="container">
-    <div class="d-flex justify-content-end align-items-end mb-3">
-        <form class="d-flex align-items-center" role="search" action="{% url 'listar' %}" method="get">
+    <div class="d-flex justify-content-end align-items-end mb-3" style="margin-top: 125px;">
+        <form class="d-flex align-items-center"  role="search" action="{% url 'listar' %}" method="get">
 
                 <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
                 {% if query %}
@@ -19,35 +18,29 @@
         </form>
     </div>
                 <div class="table-container">
-                  <table class="table table table-hover">
+                    <table id="state-saving-datatable" class="table activate-select dt-responsive nowrap w-100">
                     <thead>
                         <tr>
+                            <th scope="col">ID</th>
                             <th scope="col">Nickname</th>
                             <th scope="col">Username</th>
                             <th scope="col">Area</th>
                             <th scope="col">Idade</th>
-                            <th scope="col">Staff</th>
-                            <th scope="col">Ativo</th>
-                            <th scope="col">Admin</th>
-                            <th scope="col">entrada</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in page_obj %}
                         <tr>
+                            <td>{{user.id_user}}</td>
                             <td>{{ user.username }}</td>
                             <td>{{ user.nickname }}</td>
-                            <td>{{ user.name }}</td>
+                            <td>{{ user.area }}</td>
                             <td>{{ user.age }}</td>
-                            <td>{{ user.is_staff|yesno:"Sim,Não" }}</td>
-                            <td>{{ user.is_active|yesno:"Ativo,Inativo" }}</td>
-                            <td>{{user.is_admin |yesno:"Sim,Não"}}</td>
-                            <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>  
                             <td>
                                 <button type="button" class="btn btn-info btn-jump me-2" data-bs-toggle="modal" data-bs-target="#modalUser{{ user.id }}">Ver</button>
-                                <a class="btn btn-warning btn-jump" data-bs-toggle="modal" data-bs-target="#updateModal{{ user.id }}">Editar</a>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{% url 'delete' user.id %}">
+                                <a class="btn btn-warning btn-jump" data-bs-toggle="modal" data-bs-target="#updateModal{{ user.id }}" data-no-loading>Editar</a>
+                                <button type="button" class="btn btn-danger btn-jump " data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{% url 'delete' user.id %}">
                                     Deletar
                                 </button>
                             {% endfor %}
@@ -57,31 +50,31 @@
         </div>
     </div>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próximo">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
 
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+              <span aria-hidden="true">&laquo;</span>
+          </a>
+      </li>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próximo">
+              <span aria-hidden="true">&raquo;</span>
+          </a>
+      </li>
+      {% endif %}
+  </ul>
+</nav>
+</div>
 <!-- Modais -->
 {% for user in page_obj %}
 <div class="modal fade " id="modalUser{{ user.id }}" tabindex="-1" aria-labelledby="modalUserLabel{{ user.id }}" aria-hidden="true">
@@ -160,6 +153,4 @@
                 </div>
             </div>
         </div>
-    </div>
-
     {% endblock %}
