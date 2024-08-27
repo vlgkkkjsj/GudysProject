@@ -1,62 +1,98 @@
 {% extends "basesSU/baseLogged.html" %}
 
 {% block content %}
-<div class="profile-container">
-  <div class="profile-card shadow overflow">
+<div class="profile-container-user">
+  <div class="profile-card-user shadow overflow">
+    <nav class="navbar-expand-lg user-navbar">
+        <div class="collapse navbar-collapse" id="navbarUser">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#info">Informações</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'redirectUserPassword'%}"> Senhas e Segurança</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#upload">Upload Foto</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
     <div id="header"></div>
     <div id="profile">
-      <div class="profile-image">
+      <div class="profile-image-user">
         <img src="https://a4-images.myspacecdn.com/images03/2/85a286a4bbe84b56a6d57b1e5bd03ef4/300x300.jpg" alt="Profile Picture" />
       </div>
-      <div class="profile-name">
-        Daft Punk
+      <div class="profile-name-user">
+        {{user.nickname}}
       </div>
-      <div class="profile-nickname">
-        @daftpunk
+      <div class="profile-nickname-user">
+        {{user.id_user}}
       </div>
-      <div class="profile-location">
-        <i class="material-icons">place</i> Europe
-      </div>
-      <div class="profile-bottom">
-        <span class="profile-following">
-          <span class="profile-count">170</span> following
-        </span>
-        <span class="profile-followers">
-          <span class="profile-count">1M</span> followers
-        </span>
-        <div class="Profile-Conteudo">
-          <dl class="row mb-0">
-            <dt class="col-sm-3">Description lists</dt>
-            <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
-                    
-            <dt class="col-sm-3">Euismod</dt>
-            <dd class="col-sm-9">
-                <p>Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</p>
-                <p>Donec id elit non mi porta gravida at eget metus.</p>
-            </dd>
-                    
-            <dt class="col-sm-3">Malesuada porta</dt>
-            <dd class="col-sm-9">Etiam porta sem malesuada magna mollis euismod.</dd>
-                    
-            <dt class="col-sm-3 text-truncate">Truncated term is truncated</dt>
-            <dd class="col-sm-9">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
-                    
-            <dt class="col-sm-3">Nesting</dt>
-            <dd class="col-sm-9">
-                <dl class="row mb-0">
-                    <dt class="col-sm-4">Nested definition list</dt>
-                    <dd class="col-sm-8">Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc.</dd>
-                </dl>
-            </dd>
-        </dl>
-                                                        
+    </div>
+
+    <div class="info-card-user">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">User ID:</dt>
+        <dd class="col-sm-9">{{user.id_user}}</dd>
+        
+        <dt class="col-sm-3">Username:</dt>
+        <dd class="col-sm-9">{{user.username}}</dd>
+        
+        <dt class="col-sm-3">Nickname:</dt>
+        <dd class="col-sm-9">{{user.nickname}}</dd>
+        
+        <dt class="col-sm-3">Area:</dt>
+        <dd class="col-sm-9">
+          <div class="role-list">
+              <span class="badge badge-outline-pill" data-role="{{ user.area }}">{{ user.area }}</span>
+          </div> 
+        </dd> <!-- Fechando a tag dd -->
+
+        <dt class="col-sm-3">IDADE:</dt>
+        <dd class="col-sm-9">{{ user.age }}</dd>
+
+        <dt class="col-sm-3">Ativo:</dt>
+        <dd class="col-sm-9">{{ user.is_active|yesno:"Ativo,Inativo" }}</dd>
+
+        <dt class="col-sm-3">Admin:</dt>
+        <dd class="col-sm-9">{{user.is_admin |yesno:"Sim,Não"}}</dd>
+      </dl>
+
+      <div class="divider"></div>
+
+      <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="file" class="form-control" id="inputGroupFile02">
+          <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
-      </div>
-    
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{user.username}}">
+
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname" value="{{user.nickname}}">
+
+        <label for="Area">Area:</label>
+        <input type="text" id="Area" name="Area" value="{{user.area}}">
+
+        <label for="idade">IDADE:</label>
+        <input type="text" id="idade" name="idade" value="{{user.age}}">
+
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
     </div>
-    
-    </div>
-    
   </div>
 </div>
-{% endblock %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      // Identifique o cargo do usuário e aplique a classe CSS correspondente
+      const userArea = "{{ user.area }}".toLowerCase();
+      const badge = document.querySelector('.badge-outline-pill');
+      if (badge) {
+          badge.classList.add(`area-${userArea}`);
+      }
+  });
+  </script>
+  {% endblock %}

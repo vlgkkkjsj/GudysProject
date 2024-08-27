@@ -4,8 +4,11 @@ django-appconf==1.0.6
 django-axes==6.5.1
 django-compressor==4.3
 django-cors-headers==4.4.0
+django-redis==5.4.0
 djangorestframework==3.15.2
+pillow==10.4.0
 rcssmin==1.1.1
+redis==5.0.8
 rjsmin==1.2.1
 sqlparse==0.5.0
 tzdata==2024.1

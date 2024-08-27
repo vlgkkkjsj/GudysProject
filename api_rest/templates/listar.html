@@ -86,6 +86,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>ID: {{ user.id }}</p>
+                <p><strong>ID: {{ user.id_user }}</p>
                 <p><strong>username: {{ user.username }}</p>
                 <p><strong>Nickname: {{ user.nickname }}</p>
                 <p><strong>Area: {{ user.area }}</p>
@@ -114,20 +115,24 @@
           <form action="{% url 'update' user.id %}"  method="POST">
             {% csrf_token %}
             <div class="mb-3">
+                <label for="firstName" class="form-label">ID User</label>
+                <input type="text" class="form-control" name="id_user" id="firstName" placeholder="nickname" value="{{user.id_user}}" required>
+            </div>
+            <div class="mb-3">
                 <label for="firstName" class="form-label">Nickname</label>
                 <input type="text" class="form-control" name="nickname" id="firstName" placeholder="nickname" value="{{user.nickname}}" required>
             </div>
             <div class="mb-3">
-                <label for="firstName" class="form-label">Name</label>
-                <input type="text" class="form-control" name="name" id="firstName" placeholder="name" value="{{user.name}}" required>
+                <label for="firstName" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="firstName" placeholder="name" value="{{user.username}}" required>
             </div>
             <div class="mb-3">
-                <label for="firstName" class="form-label">Gender</label>
-                <input type="text" class="form-control" name="gender" id="firstName" placeholder="gender" value="{{user.gender}}" required>
+                <label for="firstName" class="form-label">Area</label>
+                <input type="text" class="form-control" name="area" id="firstName" placeholder="area" value="{{user.area}}" required>
             </div>
             <div class="mb-3">
-                <label for="firstName" class="form-label">Age</label>
-                <input type="text" class="form-control" name="age" id="firstName" placeholder="age" value="{{user.age}}" required>
+                <label for="firstName" class="form-label">Idade</label>
+                <input type="text" class="form-control" name="age" id="firstName" placeholder="idade" value="{{user.age}}" required>
             </div>  
             <button type="submit" class="btn btn-primary">Update</button>
           </form>

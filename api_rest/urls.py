@@ -23,6 +23,8 @@ urlpatterns = [
     path('cadAdmin/', cadAdmin, name='cadAdmin'),
     path('userProfile/', redirectUserProfile, name='redirectUserProfile'),
     path('redirectRpp/', redirectRpp, name='redirectRpp'),
-    path('rppList/', rppList, name='rppList'),
+    path('redirectUserPassword/', redirectUserPassword, name='redirectUserPassword'),
     path('relatorios/', custom_logout, name='logout'),
+    path('redefinicao/', redefPassw, name='redefPassw'),
+
 ]

@@ -1,4 +1,6 @@
 {
     "liveServer.settings.port": 5501,
-    "better-comments.highlightPlainText": true
+    "better-comments.highlightPlainText": true,
+    "glassit.step": 8,
+    "glassit.alpha": 230
 }

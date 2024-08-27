@@ -10,7 +10,12 @@ from django.db.models import Q
 from django.middleware.csrf import get_token
 from django.contrib import messages
 import logging
+from django.core.cache import cache
 import secrets
+from django.db import IntegrityError
+from django.views.decorators.cache import cache_page
+    
+
 
 logger = logging.getLogger(__name__)
 # from django.views.decorators.csrf import csrf_exempt
@@ -111,36 +116,40 @@ def logar(request):
     return render(request, 'login.html', {'form_login': form_login})
 
 @login_required
-
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 @login_required
 def listar(request):
-    users= User.objects.all().order_by('area')
-    query = request.GET.get('q')
+        users = cache.get('users_list')
+        if not users:
+            users = User.objects.all().order_by('area')
+            cache.set('users_list', users, timeout=60*15) 
 
-    if query:
-        users = users.filter(Q(name__icontains=query))
+        query = request.GET.get('q')
+        if query:
+            users = users.filter(Q(name__icontains=query))
 
-    paginator = Paginator(users, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(users, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    context = {
-        'page_obj': page_obj,
-        'query': query,
-    }
-    return render(request, 'listar.html', context)
+        context = {
+            'page_obj': page_obj,
+            'query': query,
+        }
+        return render(request, 'listar.html', context)
 
 # Esse caralho, vai cadastrar os usuarios
 
 #view cadastrar
 @login_required
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 @user_passes_test(lambda u: u.is_superuser or u.is_admin) # Apenas super Usuarios e Admins tem acesso
 def cadastrar(request):
     users = User.objects.all()
     return render(request, "cadastro.html", {"users": users})
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.is_admin) # Apenas super Usuarios e Admins tem acesso
+@user_passes_test(lambda u: u.is_superuser or u.is_admin)  # Apenas superusuários e admins têm acesso
 def salvar(request):
     if request.method == "POST":
         nickname = request.POST.get("nickname")
@@ -158,36 +167,42 @@ def salvar(request):
                 nickname=nickname,
                 area=area,
                 id_user=id_user,
-                age=age,
+                age=age,  # Corrigido: era "ge" em vez de "age"
                 is_active=is_active,
                 is_staff=is_staff,
                 is_admin=is_admin,
-                is_superuser= False
+                is_superuser=False
             )
             user.save()
             messages.success(request, 'Usuário salvo com sucesso!')
-        except Exception as e:
-            logger.error(f'Erro ao salvar o usuário: {e}')
+        except ValueError as e:
+            logger.error(f'Erro de valor ao salvar o usuário: {e}')
             messages.error(request, f'Erro ao salvar o usuário: {e}')
-        
+        except IntegrityError as e:
+            logger.error(f'Erro de integridade ao salvar o usuário: {e}')
+            messages.error(request, f'Erro ao salvar o usuário: {e}')
+
         return redirect('listar') 
     
-    return render(request, 'cadastro.html')  
+    return render(request, 'cadastro.html')
 
 
 # view para editar
 @login_required # Variavel usuario recebe usuario ou retorna erro 404,caso o id nao seja encontrado dentro do DB
 @user_passes_test(lambda u: u.is_superuser or u.is_admin)
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 def editar(request, id):
     user = get_object_or_404(User, id=id)
-    if not (request.user.is_superuser or request.is_admin):
-        return HttpResponseForbidden("não possui acesso")
+    
+    # Verifica se o usuário atual é superusuário ou admin
+    if not (request.user.is_superuser or request.user.is_admin):
+        return HttpResponseForbidden("Você não possui acesso para editar este usuário.")
+    
     return render(request, "update.html", {"user": user})
-
 @login_required
 @user_passes_test(lambda u: u.is_superuser or u.is_admin)
 def update(request, id):
-    user = get_object_or_404(id=id)
+  
     if request.method =='POST':
         nickname = request.POST.get("nickname")
         username = request.POST.get("username")
@@ -250,22 +265,26 @@ def cadAdmin(request):
     return render(request, 'SuPages/cadAdmin.html')
 
 @login_required
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 @user_passes_test(lambda u: u.is_superuser)
 def listarAdmin(request):#eu nao sei como isso funciona ao certo, e essa merda não deve ser tocada, senao quebra inteiro a porra do codigo
-    users = User.objects.filter(is_admin=True, is_staff=True)  # Filtrar administradores
-    query = request.GET.get('q', '')
-    if query:
-        users = users.filter(Q(username__icontains=query) | Q(nickname__icontains=query))
-
-    paginator = Paginator(users, 10)  # Exibir 10 administradores por página
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-        'query': query,
-    }
-    return render(request, 'SuPages/listarAdmin.html', context)
+        users = cache.get('users_list')
+        if not users:
+                users = User.objects.filter(is_admin=True, is_staff=True)  # Filtrar administradores
+                cache.set('users_list', users, timeout=60*15) 
+        query = request.GET.get('q', '')
+        if query:
+            users = users.filter(Q(username__icontains=query) | Q(nickname__icontains=query))
+    
+        paginator = Paginator(users, 10)  # Exibir 10 administradores por página
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+    
+        context = {
+            'page_obj': page_obj,
+            'query': query,
+        }
+        return render(request, 'SuPages/listarAdmin.html', context)
 
 #------------------------- SISTEMA DE RPP ----------------------/---------------------------
 
@@ -371,6 +390,7 @@ def submitRelatorio(request):
         return redirect('historicoRelatorios')  # Redirecionar para a página de histórico
     return render(request, 'paginas/histRelatorios.html')
 
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 def historicoRelatorios(request):
     relatorios = Relatorio.objects.all().order_by('-data')  # Ordenar por data mais recente
     return render(request, 'paginas/histRelatorios.html', {'relatorios': relatorios})
@@ -384,8 +404,37 @@ def detalheRelatorio(request, relatorio_id):
 # ESSE CARALHO DE FILHO DA PUTA SERVE PRA REDIRECIONAR PRA PAGINA DO KRLH DO USUARIO
 
 @login_required
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
 @user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
 def redirectUserProfile(request):
     return render(request, 'partials/userProfile.html')
 
+#ESSE MALDITO DO KLRH SERVE PRA RECARREGAR A PAG PARA O FILHO DA PUTA ATT A SENHA
 
+@login_required
+@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
+@user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
+def redirectUserPassword(request):
+    return render(request, 'partials/userPassword.html')
+
+#ESSA DESGRACA CARALHENTA VAI SERVIR PO CABA REDEFINIR A SENHA DELE.
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
+def redefPassw(request,username):
+    user = get_object_or_404(User, username=username)
+
+    if request.method == 'POST':
+        password = request.POST.get('password')
+
+        # Define a nova senha usando o método set_password
+        if password:
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Senha redefinida com sucesso!')
+            return redirect('redirectUserPassword')
+        else:
+            messages.error(request, 'A senha não pode estar vazia.')
+
+    return render(request, 'cadastro.html', {'user': user})
+           

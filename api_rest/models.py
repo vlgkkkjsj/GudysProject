@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, nickname, username, password=None, id_user=None, **extra_fields):
+    def create_superuser(self, nickname, username, password=None, **extra_fields):
         if not username:
             raise ValueError('O nome de usuário deve ser fornecido')
          
@@ -32,7 +32,6 @@ class UserManager(BaseUserManager):
         superuser = self.model(
             nickname=nickname,
             username=username,
-            id_user=id_user,
             **extra_fields
         )
         superuser.is_staff = True
@@ -70,7 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
+    
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['nickname']
 
