@@ -121,13 +121,11 @@ def logar(request):
 def listar(request):
         users = cache.get('users_list')
         if not users:
-            users = User.objects.all().order_by('area')
-            cache.set('users_list', users, timeout=60*15) 
-
-        query = request.GET.get('q')
+            users = User.objects.all().filter('area')
+            cache.set('users_list', users, timeout=60*30) 
+        query = request.GET.get('q', '')
         if query:
-            users = users.filter(Q(name__icontains=query))
-
+            users = users.filter(Q(username__icontains=query) | Q(nickname__icontains=query))
         paginator = Paginator(users, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -271,7 +269,7 @@ def listarAdmin(request):#eu nao sei como isso funciona ao certo, e essa merda n
         users = cache.get('users_list')
         if not users:
                 users = User.objects.filter(is_admin=True, is_staff=True)  # Filtrar administradores
-                cache.set('users_list', users, timeout=60*15) 
+                cache.set('users_list', users, timeout=60*30) 
         query = request.GET.get('q', '')
         if query:
             users = users.filter(Q(username__icontains=query) | Q(nickname__icontains=query))
@@ -437,4 +435,26 @@ def redefPassw(request,username):
             messages.error(request, 'A senha não pode estar vazia.')
 
     return render(request, 'cadastro.html', {'user': user})
-           
+
+ #ESSA DESGRACA CARALHENTA VAI SERVIR PO CABA REDEFINIR AS INFO DELE.
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
+def updateProfile(request,username):
+    user = get_object_or_404(User, username=username)
+
+    if request.method == "POST":
+        nickname = request.POST.get("nickname")
+        area = request.POST.get("area")
+        age = request.POST.get("age")
+
+        user = get_object_or_404(User, username=username)
+        user.nickname = nickname
+        user.area = area
+        user.age = age
+        user.save()
+        return redirect('redirectUserPassword')
+    else:
+        messages.error(request, 'A senha não pode estar vazia.')
+
+    return render(request, 'cadastro.html', {'user': user})
