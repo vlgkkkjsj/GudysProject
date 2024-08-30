@@ -1,16 +1,32 @@
-version: '3'
+version: '3.8'
+
 services:
   redis:
     image: redis:latest
     container_name: redis
     ports:
       - "6379:6379"
+
   django_app:
     build: .
-    command: gunicorn api_root.wsgi:application --bind 0.0.0.0:8000
+    command: >
+      sh -c "watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - media:/app/media  # Mapeia o diretório de mídia
     depends_on:
       - redis
     ports:
       - "8000:8000"
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: my_watchtower
+    command: --cleanup
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+  media:

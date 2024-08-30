@@ -26,5 +26,6 @@ urlpatterns = [
     path('redirectUserPassword/', redirectUserPassword, name='redirectUserPassword'),
     path('relatorios/', custom_logout, name='logout'),
     path('redefinicao/', redefPassw, name='redefPassw'),
-
-]
+    path('updateProfile/<str:username>/', updateProfile, name='updateProfile'),
+    
+    ]

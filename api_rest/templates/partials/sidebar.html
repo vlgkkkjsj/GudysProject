@@ -16,7 +16,7 @@
       <!-- Div do perfil do usuário fora do div de navegação -->
       <div class="userProfile ms-auto d-flex align-items-center">
         <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
+            <img src="{{ user.photo.url }}" alt="Profile Picture" width="32" height="32" class="rounded-circle me-2">
             <h6 class="username"> {{ user.username }}</h6>
         </a>
       </div>
@@ -126,7 +126,7 @@
             <hr>
             <div class="dropdown-container text-center">
                 <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <img src="{{ user.photo.url }}" alt="Profile Picture" width="32" height="32" class="rounded-circle me-2">
                     <h6 class="username">{{ user.username }}</h6>
                 </a>
                 <ul class="dropdown-menu text-small shadow">

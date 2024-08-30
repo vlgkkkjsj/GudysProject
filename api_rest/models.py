@@ -69,8 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-
+    photo = models.ImageField(upload_to='profile_photos/')
     
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['nickname']

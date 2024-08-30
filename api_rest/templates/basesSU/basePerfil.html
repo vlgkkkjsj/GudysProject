@@ -12,9 +12,6 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'redirectUserPassword' %}">Senhas e Seguranca</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#upload">Upload Foto</a>
-            </li>
           </ul>
         </div>
     </nav>
@@ -22,7 +19,7 @@
     <div id="header"></div>
     <div id="profile">
       <div class="profile-image-user">
-        <img src="https://a4-images.myspacecdn.com/images03/2/85a286a4bbe84b56a6d57b1e5bd03ef4/300x300.jpg" alt="Profile Picture" />
+        <img src="{{ user.photo.url }}" alt="Profile Picture">
       </div>
       <div class="profile-name-user">
         {{ user.nickname }}

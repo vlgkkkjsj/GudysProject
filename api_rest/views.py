@@ -121,11 +121,13 @@ def logar(request):
 def listar(request):
         users = cache.get('users_list')
         if not users:
-            users = User.objects.all().filter('area')
-            cache.set('users_list', users, timeout=60*30) 
-        query = request.GET.get('q', '')
+            users = User.objects.all().order_by('area')
+            cache.set('users_list', users, timeout=60*15) 
+
+        query = request.GET.get('q')
         if query:
-            users = users.filter(Q(username__icontains=query) | Q(nickname__icontains=query))
+            users = users.filter(Q(name__icontains=query))
+
         paginator = Paginator(users, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -158,6 +160,7 @@ def salvar(request):
         is_active = request.POST.get("is_active") == "on"
         is_staff = request.POST.get("is_staff") == "on"
         is_admin = request.POST.get("is_admin") == "on"
+      
        
         try:
             user = User.objects.create_user(
@@ -165,12 +168,14 @@ def salvar(request):
                 nickname=nickname,
                 area=area,
                 id_user=id_user,
-                age=age,  # Corrigido: era "ge" em vez de "age"
+                age=age,  
                 is_active=is_active,
                 is_staff=is_staff,
                 is_admin=is_admin,
                 is_superuser=False
+                
             )
+
             user.save()
             messages.success(request, 'Usuário salvo com sucesso!')
         except ValueError as e:
@@ -440,21 +445,21 @@ def redefPassw(request,username):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser or u.is_staff or u.is_admin)
-def updateProfile(request,username):
+def updateProfile(request, username):
     user = get_object_or_404(User, username=username)
 
     if request.method == "POST":
         nickname = request.POST.get("nickname")
         area = request.POST.get("area")
         age = request.POST.get("age")
+        photo = request.FILES.get("photo")
 
-        user = get_object_or_404(User, username=username)
         user.nickname = nickname
         user.area = area
         user.age = age
+        if photo:
+            user.photo.save(photo.name, photo)
         user.save()
-        return redirect('redirectUserPassword')
-    else:
-        messages.error(request, 'A senha não pode estar vazia.')
+        return redirect('redirectUserProfile')
 
-    return render(request, 'cadastro.html', {'user': user})
+    return render(request, 'partials/userProfile.html', {'user': user})

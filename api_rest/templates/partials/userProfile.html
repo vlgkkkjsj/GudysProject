@@ -10,7 +10,7 @@
               <a class="nav-link active" aria-current="page" href="#info">Informações</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'redirectUserPassword'%}"> Senhas e Segurança</a>
+              <a class="nav-link" href="{% url 'redirectUserPassword' %}"> Senhas e Segurança</a>
             </li>
           </ul>
         </div>
@@ -18,33 +18,33 @@
     <div id="header"></div>
     <div id="profile">
       <div class="profile-image-user">
-        <img src="https://a4-images.myspacecdn.com/images03/2/85a286a4bbe84b56a6d57b1e5bd03ef4/300x300.jpg" alt="Profile Picture" />
+        <img src="{{ user.photo.url }}" alt="Profile Picture">
       </div>
       <div class="profile-name-user">
-        {{user.nickname}}
+        {{ user.nickname }}
       </div>
       <div class="profile-nickname-user">
-        {{user.id_user}}
+        {{ user.id_user }}
       </div>
     </div>
 
     <div class="info-card-user">
       <dl class="row mb-0">
         <dt class="col-sm-3">User ID:</dt>
-        <dd class="col-sm-9">{{user.id_user}}</dd>
+        <dd class="col-sm-9">{{ user.id_user }}</dd>
         
         <dt class="col-sm-3">Username:</dt>
-        <dd class="col-sm-9">{{user.username}}</dd>
+        <dd class="col-sm-9">{{ user.username }}</dd>
         
         <dt class="col-sm-3">Nickname:</dt>
-        <dd class="col-sm-9">{{user.nickname}}</dd>
+        <dd class="col-sm-9">{{ user.nickname }}</dd>
         
         <dt class="col-sm-3">Area:</dt>
         <dd class="col-sm-9">
           <div class="role-list">
               <span class="badge badge-outline-pill" data-role="{{ user.area }}">{{ user.area }}</span>
-          </div> 
-        </dd> <!-- Fechando a tag dd -->
+          </div>
+        </dd>
 
         <dt class="col-sm-3">IDADE:</dt>
         <dd class="col-sm-9">{{ user.age }}</dd>
@@ -53,35 +53,33 @@
         <dd class="col-sm-9">{{ user.is_active|yesno:"Ativo,Inativo" }}</dd>
 
         <dt class="col-sm-3">Admin:</dt>
-        <dd class="col-sm-9">{{user.is_admin |yesno:"Sim,Não"}}</dd>
+        <dd class="col-sm-9">{{ user.is_admin|yesno:"Sim,Não" }}</dd>
       </dl>
 
       <div class="divider"></div>
 
-      <form method="POST" action="" enctype="multipart/form-data">
+      <form method="POST" action="{% url 'updateProfile' user.username %}"enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
-          <input type="file" class="form-control" id="inputGroupFile02">
+          <input type="file" class="" id="inputGroupFile02" name="photo">
           <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
 
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="{{user.username}}">
-
         <label for="nickname">Nickname:</label>
-        <input type="text" id="nickname" name="nickname" value="{{user.nickname}}">
+        <input type="text" id="nickname" name="nickname" value="{{ user.nickname }}">
 
-        <label for="Area">Area:</label>
-        <input type="text" id="Area" name="Area" value="{{user.area}}">
+        <label for="area">Area:</label>
+        <input type="text" id="area" name="area" value="{{ user.area }}">
 
-        <label for="idade">IDADE:</label>
-        <input type="text" id="idade" name="idade" value="{{user.age}}">
+        <label for="age">IDADE:</label>
+        <input type="text" id="age" name="age" value="{{ user.age }}">
 
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
       // Identifique o cargo do usuário e aplique a classe CSS correspondente
@@ -91,5 +89,5 @@
           badge.classList.add(`area-${userArea}`);
       }
   });
-  </script>
-  {% endblock %}
+</script>
+{% endblock %}
