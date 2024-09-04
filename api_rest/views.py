@@ -14,7 +14,8 @@ from django.core.cache import cache
 import secrets
 from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
-    
+from api_rest.models import DiscordServer
+import requests
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +80,6 @@ def homeLog(request):
         return redirect('sideStaff')
     
     return HttpResponse("Acesso negado")  # Retorne uma resposta adequada
-
 
 @login_required
 def home_dashboard(request):

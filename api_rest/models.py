@@ -4,15 +4,17 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+import requests
+import logging
 
 class UserManager(BaseUserManager):
-        
-    def create_user(self, nickname, area, age, username, password=None,id_user=None , **extra_fields):
+    
+    def create_user(self, nickname, area, age, username, password=None, id_user=None, **extra_fields):
         if not username:
             raise ValueError('O nome de usuário deve ser fornecido')
         user = self.model(
             nickname=nickname,
-            id_user = id_user,
+            id_user=id_user,
             area=area,
             age=age,
             username=username,
@@ -69,8 +71,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    photo = models.ImageField(upload_to='profile_photos/')
-    
+    photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['nickname']
 
@@ -109,3 +111,10 @@ class CookieUser(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     cookie_value = models.CharField(max_length=16) 
     created_at = models.DateTimeField(auto_now_add=True)
+
+class DiscordServer(models.Model):
+    guild_id = models.CharField(max_length=100, unique=True)
+    member_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
