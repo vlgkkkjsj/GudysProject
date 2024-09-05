@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainContent = document.querySelector('.main-content');
     const navLinks = document.querySelectorAll('.nav-link');
     const tableRows = document.querySelectorAll('.table-hover tbody tr');
-    const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
+    const deleteButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#deleteModal"]');
     const modals = document.querySelectorAll('.modal');
     const forms = document.querySelectorAll('form');
 
@@ -114,7 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const deleteUrl = button.getAttribute('data-url');
-                document.getElementById('confirmDeleteBtn').onclick = () => window.location.href = deleteUrl;
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                if (confirmDeleteBtn) {
+                    confirmDeleteBtn.onclick = () => window.location.href = deleteUrl;
+                }
             });
         });
 

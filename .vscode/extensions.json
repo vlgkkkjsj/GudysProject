@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "aaron-bond.better-comments",
-        "kruemelkatze.vscode-dashboard",
-        "leonardssh.vscord"
+        "kruemelkatze.vscode-dashboard"
     ]
 }

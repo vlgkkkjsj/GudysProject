@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse, HttpResponseForbidden 
-from .models import User, Relatorio, CallStaff
-from .modelsRequest import Request
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
@@ -9,14 +7,14 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.middleware.csrf import get_token
 from django.contrib import messages
-import logging
 from django.core.cache import cache
-import secrets
-from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
-from api_rest.models import DiscordServer
-import requests
+from django.db import IntegrityError
+import logging
+import secrets
 
+from .models import User, Relatorio, CallStaff
+from .modelsRequest import Request
 
 logger = logging.getLogger(__name__)
 # from django.views.decorators.csrf import csrf_exempt
@@ -198,8 +196,6 @@ def salvar(request):
         return redirect('listar') 
     
     return render(request, 'cadastro.html')
-
-
 # view para editar
 @login_required # Variavel usuario recebe usuario ou retorna erro 404,caso o id nao seja encontrado dentro do DB
 @user_passes_test(lambda u: u.is_superuser or u.is_admin)

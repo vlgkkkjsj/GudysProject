@@ -29,7 +29,18 @@
                     <form id="filterForm" action="{% url 'listar' %}" method="get">
                         <div class="mb-3">
                             <label for="areaFilter" class="form-label">Área</label>
-                            <input type="text" class="form-control" id="areaFilter" name="area" placeholder="Digite a área" value="{% if request.GET.area %}{{ request.GET.area }}{% endif %}">
+                            <select class="form-select" id="areaFilter" name="area">
+                                <option value="">Todas as Áreas</option>
+                                <option value="dev" {% if request.GET.area == 'dev' %}selected{% endif %}>dev</option>
+                                <option value="eventos" {% if request.GET.area == 'eventos' %}selected{% endif %}>Eventos</option>
+                                <option value="design" {% if request.GET.area == 'design' %}selected{% endif %}>design</option>
+                                <option value="jornalismo" {% if request.GET.area == 'jornalismo' %}selected{% endif %}>jornalismo</option>
+                                <option value="movcall" {% if request.GET.area == 'movcall' %}selected{% endif %}>movcall</option>
+                                <option value="movchat" {% if request.GET.area == 'movchat' %}selected{% endif %}>movchat</option>
+                                <option value="recrutamento" {% if request.GET.area == 'recrutamento' %}selected{% endif %}>recrutamento</option>
+                                <option value="suporte" {% if request.GET.area == 'suporte' %}selected{% endif %}>suporte</option>
+                            </select>
+                            
                         </div>
                         <div class="mb-3">
                             <label for="ageFilter" class="form-label">Idade (mínimo)</label>
@@ -45,7 +56,6 @@
             </div>
         </div>
     </div>
-
     <div class="table-container mt-4">
         <table id="state-saving-datatable" class="table activate-select dt-responsive nowrap w-100">
             <thead>
