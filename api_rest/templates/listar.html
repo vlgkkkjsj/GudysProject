@@ -1,161 +1,194 @@
 {% extends 'basesSU/baseLogged.html' %}
 
 {% block title %}Listar Usuários{% endblock %}
+
 {% block content %}
-
 <div class="container">
-    <div class="d-flex justify-content-end align-items-end mb-3" style="margin-top: 125px;">
-        <form class="d-flex align-items-center"  role="search" action="{% url 'listar' %}" method="get">
-
-                <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
-                {% if query %}
-                    <a href="{% url 'listar' %}" class="btn btn-outline-secondary ms-2">
-                        <i class="bi bi-x-circle"></i>
-                    </a>
-                {% endif %}
-                <button class="btn btn-outline-success ms-2" type="submit">Search</button>
-            </div>
+    <div class="d-flex justify-content-end align-items-center mb-3" style="margin-top: 125px;">
+        <form class="d-flex align-items-center" role="search" action="{% url 'listar' %}" method="get">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{% if query %}{{ query }}{% endif %}">
+            {% if query %}
+                <a href="{% url 'listar' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x-circle"></i>
+                </a>
+            {% endif %}
+            <button class="btn btn-outline-success ms-2" type="submit">Search</button>
         </form>
-    </div>
-                <div class="table-container">
-                    <table id="state-saving-datatable" class="table activate-select dt-responsive nowrap w-100">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Nickname</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Area</th>
-                            <th scope="col">Idade</th>
-                            <th scope="col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in page_obj %}
-                        <tr>
-                            <td>{{user.id_user}}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.nickname }}</td>
-                            <td>{{ user.area }}</td>
-                            <td>{{ user.age }}</td>
-                            <td>
-                                <button type="button" class="btn btn-info btn-jump me-2" data-bs-toggle="modal" data-bs-target="#modalUser{{ user.id }}">Ver</button>
-                                <a class="btn btn-warning btn-jump" data-bs-toggle="modal" data-bs-target="#updateModal{{ user.id }}" data-no-loading>Editar</a>
-                                <button type="button" class="btn btn-danger btn-jump " data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{% url 'delete' user.id %}">
-                                    Deletar
-                                </button>
-                            {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#filterModal">Filtrar</button>
     </div>
 
-
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-      {% if page_obj.has_previous %}
-      <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-              <span aria-hidden="true">&laquo;</span>
-          </a>
-      </li>
-      {% endif %}
-      {% for num in page_obj.paginator.page_range %}
-      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-      </li>
-      {% endfor %}
-      {% if page_obj.has_next %}
-      <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próximo">
-              <span aria-hidden="true">&raquo;</span>
-          </a>
-      </li>
-      {% endif %}
-  </ul>
-</nav>
-</div>
-<!-- Modais -->
-{% for user in page_obj %}
-<div class="modal fade " id="modalUser{{ user.id }}" tabindex="-1" aria-labelledby="modalUserLabel{{ user.id }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered fade-in fade-out">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalUserLabel{{ user.id }}">Detalhes do Usuário</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>ID: {{ user.id }}</p>
-                <p><strong>ID: {{ user.id_user }}</p>
-                <p><strong>username: {{ user.username }}</p>
-                <p><strong>Nickname: {{ user.nickname }}</p>
-                <p><strong>Area: {{ user.area }}</p>
-                <p><strong>Idade: {{ user.age }}</p>
-                <p><strong>staff: {{ user.is_active|yesno:"Ativo,Inativo" }}</p>
-                <p><strong>ativo: {{user.is_admin |yesno:"Sim,Não"}}</p>
-                <p><strong>entrada: {{ user.date_joined|date:"d/m/Y H:i" }}</p>
-           </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-<!-- Modal -->
-{% for user in page_obj %}
-<div class="modal fade" id="updateModal{{user.id}}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="updateModalLabel">Update Information</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="{% url 'update' user.id %}"  method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="firstName" class="form-label">ID User</label>
-                <input type="text" class="form-control" name="id_user" id="firstName" placeholder="nickname" value="{{user.id_user}}" required>
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Nickname</label>
-                <input type="text" class="form-control" name="nickname" id="firstName" placeholder="nickname" value="{{user.nickname}}" required>
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="firstName" placeholder="name" value="{{user.username}}" required>
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Area</label>
-                <input type="text" class="form-control" name="area" id="firstName" placeholder="area" value="{{user.area}}" required>
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Idade</label>
-                <input type="text" class="form-control" name="age" id="firstName" placeholder="idade" value="{{user.age}}" required>
-            </div>  
-            <button type="submit" class="btn btn-primary">Update</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  {%endfor%}
-         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirmação de Deleção</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Tem certeza que deseja deletar este usuário?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Deletar</button>
-                    </div>
+    <!-- Modal de Filtragem -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filtrar Usuários</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="filterForm" action="{% url 'listar' %}" method="get">
+                        <div class="mb-3">
+                            <label for="areaFilter" class="form-label">Área</label>
+                            <input type="text" class="form-control" id="areaFilter" name="area" placeholder="Digite a área" value="{% if request.GET.area %}{{ request.GET.area }}{% endif %}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ageFilter" class="form-label">Idade (mínimo)</label>
+                            <input type="number" class="form-control" id="ageFilter" name="age_min" placeholder="Mínimo de idade" value="{% if request.GET.age_min %}{{ request.GET.age_min }}{% endif %}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ageMaxFilter" class="form-label">Idade (máximo)</label>
+                            <input type="number" class="form-control" id="ageMaxFilter" name="age_max" placeholder="Máximo de idade" value="{% if request.GET.age_max %}{{ request.GET.age_max }}{% endif %}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                    </form>
                 </div>
             </div>
         </div>
-    {% endblock %}
+    </div>
+
+    <div class="table-container mt-4">
+        <table id="state-saving-datatable" class="table activate-select dt-responsive nowrap w-100">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nickname</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Área</th>
+                    <th scope="col">Idade</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in page_obj %}
+                <tr>
+                    <td>{{ user.id_user }}</td>
+                    <td>{{ user.nickname }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.area }}</td>
+                    <td>{{ user.age }}</td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-jump me-2" data-bs-toggle="modal" data-bs-target="#modalUser{{ user.id }}">Ver</button>
+                        <a class="btn btn-warning btn-jump" data-bs-toggle="modal" data-bs-target="#updateModal{{ user.id }}" data-no-loading>Editar</a>
+                        <button type="button" class="btn btn-danger btn-jump delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{% url 'delete' user.id %}">
+                            Deletar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próximo">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav> 
+
+    <!-- Modais -->
+    {% for user in page_obj %}
+    <!-- Modal de Detalhes -->
+    <div class="modal fade" id="modalUser{{ user.id }}" tabindex="-1" aria-labelledby="modalUserLabel{{ user.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalUserLabel{{ user.id }}">Detalhes do Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>ID User:</strong> {{ user.id_user }}</p>
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Nickname:</strong> {{ user.nickname }}</p>
+                    <p><strong>Área:</strong> {{ user.area }}</p>
+                    <p><strong>Idade:</strong> {{ user.age }}</p>
+                    <p><strong>Ativo:</strong> {{ user.is_active|yesno:"Sim,Não" }}</p>
+                    <p><strong>Admin:</strong> {{ user.is_admin|yesno:"Sim,Não" }}</p>
+                    <p><strong>Entrada:</strong> {{ user.date_joined|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal fade" id="updateModal{{ user.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ user.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel{{ user.id }}">Editar Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'update' user.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_user" class="form-label">ID User</label>
+                            <input type="text" class="form-control" name="id_user" value="{{ user.id_user }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nickname" class="form-label">Nickname</label>
+                            <input type="text" class="form-control" name="nickname" value="{{ user.nickname }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="area" class="form-label">Área</label>
+                            <input type="text" class="form-control" name="area" value="{{ user.area }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Idade</label>
+                            <input type="number" class="form-control" name="age" value="{{ user.age }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza de que deseja excluir este usuário?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

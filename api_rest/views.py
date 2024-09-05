@@ -116,28 +116,38 @@ def logar(request):
     return render(request, 'login.html', {'form_login': form_login})
 
 @login_required
-@cache_page(60*30)#essa porra aq cacheia o conteudo por 30 min, dps é redefinido o cache
-@login_required
+@cache_page(60*30)
 def listar(request):
-        users = cache.get('users_list')
-        if not users:
-            users = User.objects.all().order_by('area')
-            cache.set('users_list', users, timeout=60*15) 
+    query = request.GET.get('q', '')
+    area_filter = request.GET.get('area', '')
+    age_min = request.GET.get('age_min', '')
+    age_max = request.GET.get('age_max', '')
 
-        query = request.GET.get('q')
-        if query:
-            users = users.filter(Q(name__icontains=query))
+    users = User.objects.all()
 
-        paginator = Paginator(users, 10)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+    if query:
+        users = users.filter(username__icontains=query)
 
-        context = {
-            'page_obj': page_obj,
-            'query': query,
-        }
-        return render(request, 'listar.html', context)
+    if area_filter:
+        users = users.filter(area__icontains=area_filter)
 
+    if age_min:
+        users = users.filter(age__gte=age_min)
+
+    if age_max:
+        users = users.filter(age__lte=age_max)
+
+    paginator = Paginator(users, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'listar.html', {
+        'page_obj': page_obj,
+        'query': query,
+        'area': area_filter,
+        'age_min': age_min,
+        'age_max': age_max
+    })
 # Esse caralho, vai cadastrar os usuarios
 
 #view cadastrar
