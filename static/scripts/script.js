@@ -1,47 +1,33 @@
+import '../styles/estilos.css'; // Ajuste o caminho conforme a estrutura do projeto
 document.addEventListener("DOMContentLoaded", () => {
+    // Variáveis e seletores
     const sidebar = document.querySelector('.sidebar');
-    const toggleSidebarBtn = document.createElement('div');
-    const loadingOverlay = document.getElementById('loading');
-    const minLoadingTime = 800;
-    const transitionDuration = 0.5; 
-    const badges = document.querySelectorAll('.badge-outline-pill');
     const mainContent = document.querySelector('.main-content');
+    const loadingOverlay = document.getElementById('loading');
+    const badges = document.querySelectorAll('.badge-outline-pill');
     const navLinks = document.querySelectorAll('.nav-link');
     const tableRows = document.querySelectorAll('.table-hover tbody tr');
     const deleteButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#deleteModal"]');
     const modals = document.querySelectorAll('.modal');
     const forms = document.querySelectorAll('form');
+    const transitionDuration = 0.3; // Ajuste conforme necessário
+    const minLoadingTime = 1000; // Ajuste conforme necessário
 
-    toggleSidebarBtn.classList.add('toggle-sidebar-btn');
-    toggleSidebarBtn.innerHTML = '<span class="material-icons">menu</span>';
-    sidebar.appendChild(toggleSidebarBtn);
-
-    // Toggle sidebar
-    toggleSidebarBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
-        mainContent.classList.toggle('expanded');
-        mainContent.style.transition = `margin-left ${transitionDuration}s ease`;
-    });
-
-    // Expand sidebar when dropdown is clicked
-    document.querySelectorAll('.sidebar .nav-link.dropdown-toggle').forEach(link => {
-        link.addEventListener('click', () => {
-            if (sidebar.classList.contains('collapsed')) {
-                sidebar.classList.remove('collapsed');
-                mainContent.classList.remove('expanded');
-            }
-        });
-    });
-
-    // Update active nav link based on current URL
+    // Função para atualizar o link ativo na barra de navegação
     const updateActiveNavLink = () => {
-        const currentLocation = window.location.href;
-        navLinks.forEach(item => {
-            item.classList.toggle('nav-pills-link-active', item.href === currentLocation);
+        const path = window.location.pathname; // Obtém o caminho da URL atual
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && path.includes(href)) {
+                link.classList.add('active'); // Adiciona a classe 'active' ao link correspondente
+            } else {
+                link.classList.remove('active'); // Remove a classe 'active' dos outros links
+            }
         });
     };
 
-    // Show loading overlay and redirect
+    // Função para mostrar o overlay de carregamento e redirecionar
     const showLoadingAndRedirect = (url) => {
         loadingOverlay.style.display = 'flex';
         setTimeout(() => {
@@ -79,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Handle various events
+    // Função para lidar com vários eventos
     const handleEvents = () => {
         // Handle link clicks
         document.addEventListener('click', (event) => {
@@ -93,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Handle form submissions
         forms.forEach(form => {
             form.addEventListener('submit', () => {
-                if (form.querySelector('button[type="submit"]').classList.contains('btn-jump')) {
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton && submitButton.classList.contains('btn-jump')) {
                     loadingOverlay.style.display = 'flex';
                 }
             });
@@ -155,9 +142,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Handle toggle button click
-        document.querySelector('.toggle-button').addEventListener('click', () => {
-            document.querySelector('.toggle-element').classList.toggle('active');
-        });
+        const toggleButton = document.querySelector('.toggle-button');
+        if (toggleButton) {
+            toggleButton.addEventListener('click', () => {
+                const toggleElement = document.querySelector('.toggle-element');
+                if (toggleElement) {
+                    toggleElement.classList.toggle('active');
+                }
+            });
+        }
     };
 
     // Apply custom class based on user area

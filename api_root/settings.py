@@ -59,7 +59,6 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 # SECURE_HSTS_PRELOAD = True
 
 # veerificar nesse krlh qual é o SO e o navegador para setar os cookies
-# 
 
 # CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
@@ -71,7 +70,6 @@ AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesStandaloneBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
-
 
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1  # Tempo de espera em horas após exceder o limite de falhas
@@ -107,16 +105,15 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 ]
-
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
+STATICFILES_DIRS = [
+    BASE_DIR / 'staticfiles',
+]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'api_root.wsgi.application'
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 DATABASES = {
     'default': {
@@ -124,6 +121,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -152,7 +150,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# settings.py
 AUTH_USER_MODEL = 'api_rest.User'
 
 # Internationalization
@@ -176,6 +173,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_URL = STATIC_URL
+
+COMPRESS_ENABLED = not DEBUG
+COMPRESS_OFFLINE = not DEBUG
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
